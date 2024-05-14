@@ -23,8 +23,8 @@ parameters:
     label: Output Language
     dtype: enum
     default: python
-    options: [python, cpp]
-    option_labels: [Python, C++]
+    options: [python, cpp, asm]
+    option_labels: [Python, C++, Assembly]
 -   id: generate_options
     label: Generate Options
     dtype: enum

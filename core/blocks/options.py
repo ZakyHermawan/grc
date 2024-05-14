@@ -21,99 +21,116 @@ templates = MakoTemplates()
 
 @register_build_in
 class Options(Block):
-  print("out")
+  key = 'options'
+  label = 'Options'
+
+  parameters_data = build_params(
+    params_raw=[
+      dict(id='title',
+        label='Title',
+        dtype='string',
+        hide="${ ('none' if title else 'part') }",
+      ),
+      dict(id='author',
+        label='Author',
+        dtype='string',
+        hide="${ ('none' if author else 'part') }",
+      ),
+      dict(id='copyright',
+        label='Copyright',
+        dtype='string',
+        hide="${ ('none' if copyright else 'part') }",
+      ),
+      dict(id='description',
+        label='description',
+        dtype='string',
+        hide="${ ('none' if description else 'part') }",
+      ),
+      dict(id='output_language',
+        label='Output Language',
+        dtype='enum',
+        default='python',
+        options=['python', 'cpp', 'asm'],
+        option_labels=['Python', 'C++', 'Assembly__'],
+        hide="${ ('none' if generate_options else 'part') }",
+      ),
+      dict(id='generate_options',
+        label='Generate Options',
+        dtype='enum',
+        default='qt_gui',
+        options=['qt_gui', 'bokeh_gui', 'no_gui', 'hb', 'hb_qt_gui'],
+        option_labels=['QT GUI', 'Bokeh GUI', 'No GUI', 'Hier Block', 'Hier Block (QT GUI)'],
+      ),
+    ],
+    have_inputs=False,
+    have_outputs=False,
+    flags=Block.flags,
+    block_id=key,
+  )
+
   def __init__(self, parent):
-    print("initialized")
     super().__init__(parent)
+    # print(self.parent_platform.param_list[self.key])
+    print(self.parameters_data)
+    # workflow_params = build_params(self.parent_platform.workflows.param_list[self.key], 
+    #   have_inputs=True,
+    #   have_outputs=True,
+    #   flags=Block.flags,
+    #   block_id=self.key
+    # )
+    # self.parameters.update(workflow_params)
+
     self.workflows = []
     self.output_languages = []
     self.generate_options = []
     self.parse_workflows()
 
-    self.key = 'optionswe' # this will become id of the block
-    self.label = 'options'
-
-    self.parameters_data = build_params(
-      params_raw=[
-        dict(id='title',
-          label='Title',
-          dtype='string',
-          hide="${ ('none' if title else 'part') }",
-        ),
-        dict(id='author',
-          label='Author',
-          dtype='string',
-          hide="${ ('none' if author else 'part') }",
-        ),
-        dict(id='copyright',
-          label='Copyright',
-          dtype='string',
-          hide="${ ('none' if copyright else 'part') }",
-        ),
-        dict(id='description',
-          label='description',
-          dtype='string',
-          hide="${ ('none' if description else 'part') }",
-        ),
-# -   id: generate_options
-#     label: Generate Options
-#     dtype: enum
-#     default: qt_gui
-#     options: [qt_gui, bokeh_gui, no_gui, hb, hb_qt_gui]
-#     option_labels: [QT GUI, Bokeh GUI, No GUI, Hier Block, Hier Block (QT GUI)]
- 
-        dict(id='generate_options',
-          label='Generate Options',
-          dtype='enum',
-          default='qt_gui',
-          options=['qt_gui', 'bokeh_gui', 'no_gui', 'hb', 'hb_qt_gui'],
-          option_labels=['QT GUI', 'Bokeh GUI', 'No GUI', 'Hier Block', 'Hier Block (QT GUI)'],
-          hide="${ ('none' if generate_options else 'part') }",
-        ),
-        dict(id='workflow',
-          label='Workflow',
-          dtype='enum',
-          default='python_qt_gui_workflow',
-          options=[workflow['id'] for workflow in self.workflows],
-          options_labels=[workflow['label'] for workflow in self.workflows]
-        ),
-      ],
-      have_inputs=False,
-      have_outputs=False,
-      flags=Block.flags,
-      block_id=self.key,
-    )
-
   def parse_workflows(self):
     # read all workflow yml file
     # for each workflow, get it's parameters
-    workflow_filenames = glob.glob('../../workflows')
+    import pathlib
+    a = pathlib.Path(__file__).parent.resolve()
+    print("curr: ", a)
+    workflow_filenames = glob.glob(f'../generator/workflows/*.yml')
+
+    print(workflow_filenames)
+    return
     for workflow_filename in workflow_filenames:
       with open (workflow_filename, 'r') as wf:
         current_workflow = yaml.safe_load(wf)
+        print(current_workflow)
+        if current_workflow['output_language'] == 'Python':
+          pass
+        elif current_workflow['output_language'] == 'C++':
+          pass
+        else:
+          raise Exception(f"Unknown outpyt language in {workflow_filename}")
       self.workflows.append(current_workflow)
 
-  def _run_asserts(self, placement):
-    if not (len(placement) == 4 or len(placement) == 2):
-      self.add.error_message="length of window placement must be 4 or 2 !"
-    if not (all(i>=0 for i in placement)):
-      self.add.error_message="placement cannot be below 0!"
+# currently ignore assertion, since its only for bokeh gui
+#   def _run_asserts(self, placement):    
+#     if not (len(placement) == 4 or len(placement) == 2):
+#       self.add.error_message="length of window placement must be 4 or 2 !"
+#     if not (all(i>=0 for i in placement)):
+#       self.add.error_message="placement cannot be below 0!"
 
-    imports=templates.get('imports',"""from gnuradio import gr
-from gnuradio.filter import firdes
-from gnuradio.fft import window
-import sys
-import signal""")
+#     imports=templates.get('imports',"""from gnuradio import gr
+# from gnuradio.filter import firdes
+# from gnuradio.fft import window
+# import sys
+# import signal""")
   
   cpp_templates = MakoTemplates(includes=['#include <gnuradio/topblock.h>'])
   file_format=1
 
-  def hide_bokeh_gui_options_if_not_installed(self):
-      try:
-          import bokehgui
-      except ImportError:
-          for param in self.parameters_data:
-              if param['id'] == 'generate_options':
-                  ind = param['options'].index('bokeh_gui')
-                  del param['options'][ind]
-                  del param['option_labels'][ind]
+  # def hide_bokeh_gui_options_if_not_installed(self):
+  #     try:
+  #         import bokehgui
+  #     except ImportError:
+  #         for param in self.parameters_data:
+  #             if param['id'] == 'generate_options':
+  #                 ind = param['options'].index('bokeh_gui')
+  #                 del param['options'][ind]
+  #                 del param['option_labels'][ind]
+
+# a = Options(None)
