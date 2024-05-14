@@ -1,0 +1,40 @@
+block:
+    id: test_cpp_hb_qt_gui_workflow
+    label: QT GUI Not titled yet
+    category: '[GRC Hier Blocks]'
+    flags:
+    - cpp
+    
+parameters:
+    -   name: GUI Hint
+        key: gui_hint
+        value: ''
+        type: gui_hint
+        hide: part
+    
+inputs: []
+    
+outputs: []
+    templates:
+        import: 'from test_cpp_hb_qt_gui_workflow import test_cpp_hb_qt_gui_workflow  #
+            grc-generated hier_block'
+        make: 'test_cpp_hb_qt_gui_workflow()
+
+            this->connect(this->${id});
+
+            #set $win = ''self.%s'' % $id
+
+            ${gui_hint()($win)}'
+        callbacks: []
+    
+cpp_templates:
+        includes:
+        - '#include "test_cpp_hb_qt_gui_workflow/test_cpp_hb_qt_gui_workflow.hpp"'
+        make: this->${id} = test_cpp_hb_qt_gui_workflow_sptr(make_test_cpp_hb_qt_gui_workflow());
+        declarations: test_cpp_hb_qt_gui_workflow_sptr ${id};
+        callbacks: []
+    
+documentation: /home/zaky/workspace/grc/tests/resources/test_cpp_hb_qt_gui_workflow
+    grc_source: /home/zaky/workspace/grc/tests/resources/test_cpp_hb_qt_gui_workflow.grc
+    
+file_format: 1

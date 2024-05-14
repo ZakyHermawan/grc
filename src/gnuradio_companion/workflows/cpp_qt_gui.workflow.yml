@@ -1,0 +1,7 @@
+id: cpp_qt_gui_workflow
+label: C++ QT GUI
+description: "c++ qt gui workflow"
+output_language: C++
+generator_module: generator
+generator_class: CppTopBlockGenerator
+generator_options: qt_gui
