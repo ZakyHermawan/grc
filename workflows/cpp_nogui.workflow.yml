@@ -1,0 +1,7 @@
+id: cpp_nogui_workflow
+label: C++ No GUI
+description: "c++ no gui workflow"
+output_language: C++
+generator_module: generator
+generator_class: CppTopBlockGenerator
+generator_options: no_gui

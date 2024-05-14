@@ -1,0 +1,7 @@
+id: python_hb_nogui_workflow
+label: Python Hier Block No GUI
+description: "python hier block no gui workflow"
+output_language: Python
+generator_module: generator
+generator_class: HierBlockGenerator
+generator_options: hb
