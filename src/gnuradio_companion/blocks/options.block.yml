@@ -23,14 +23,14 @@ parameters:
     label: Output Language
     dtype: enum
     default: python
-    options: [python, cpp]
-    option_labels: [Python, C++]
+    options: []
+    option_labels: []
 -   id: generate_options
     label: Generate Options
     dtype: enum
     default: qt_gui
-    options: [qt_gui, bokeh_gui, no_gui, hb, hb_qt_gui]
-    option_labels: [QT GUI, Bokeh GUI, No GUI, Hier Block, Hier Block (QT GUI)]
+    options: []
+    option_labels: []
 -   id: gen_linking
     label: Linking
     dtype: enum
