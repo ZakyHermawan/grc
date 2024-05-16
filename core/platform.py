@@ -26,6 +26,7 @@ from .io import yaml
 from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
+from .workflow import WorkflowManager
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
+        self.workflow_manager = WorkflowManager()
         self.blocks = self.block_classes
         self.domains = {}
         self.examples_dict = {}
@@ -135,7 +137,6 @@ class Platform(Element):
 
         with Cache(Constants.CACHE_FILE, version=self.config.version) as cache:
             for file_path in self._iter_files_in_block_path(path):
-
                 if file_path.endswith('.block.yml'):
                     loader = self.load_block_description
                     scheme = schema_checker.BLOCK_SCHEME
@@ -144,6 +145,9 @@ class Platform(Element):
                     scheme = schema_checker.DOMAIN_SCHEME
                 elif file_path.endswith('.tree.yml'):
                     loader = self.load_category_tree_description
+                    scheme = None
+                elif file_path.endswith('.workflow.yml'):
+                    loader = self.workflow_manager.load_workflow
                     scheme = None
                 else:
                     continue

@@ -188,6 +188,7 @@ endif(WIN32)
 # Add subdirectories
 ########################################################################
 add_subdirectory(blocks)
+add_subdirectory(workflows)
 add_subdirectory(scripts)
 add_subdirectory(tests)
 
