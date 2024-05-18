@@ -1,7 +1,8 @@
 id: cpp_hb_nogui_workflow
-label: C++ Hier Block No GUI
 description: "c++ hier block no gui workflow"
-output_language: C++
+output_language: cpp
+output_language_label: C++
 generator_module: generator
 generator_class: CppHierBlockGenerator
 generator_options: hb
+generator_options_label: Hier Block

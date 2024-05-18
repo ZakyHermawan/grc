@@ -1,7 +1,8 @@
 id: python_bokeh_gui_workflow
-label: Python Bokeh GUI
 description: "python bokeh gui workflow"
-output_language: Python
+output_language: python
+output_language_label: Python
 generator_module: generator
 generator_class: TopBlockGenerator
 generator_options: bokeh_gui
+generator_options_label: Bokeh GUI
