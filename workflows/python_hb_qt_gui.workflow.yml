@@ -1,7 +1,8 @@
 id: python_hb_qt_gui_workflow
-label: Python Hier Block QT GUI
 description: "python hier block qt gui workflow"
-output_language: Python
+output_language: python
+output_language_label: Python
 generator_module: generator
 generator_class: QtHierBlockGenerator
 generator_options: hb_qt_gui
+generator_options_label: Hier Block (QT GUI)

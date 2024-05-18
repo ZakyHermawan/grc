@@ -1,7 +1,8 @@
 id: cpp_hb_qt_gui_workflow
-label: C++ Hier Block QT GUI
 description: "c++ hier block qt gui workflow"
-output_language: C++
+output_language: cpp
+output_language_label: C++
 generator_module: generator
 generator_class: CppHierBlockGenerator
 generator_options: hb_qt_gui
+generator_options_label: Hier Block (QT GUI)

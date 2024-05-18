@@ -1,7 +1,8 @@
 id: python_qt_gui_workflow
-label: Python QT GUI
 description: "python qt gui workflow"
-output_language: Python
+output_language: python
+output_language_label: Python
 generator_module: generator
 generator_class: TopBlockGenerator
 generator_options: qt_gui
+generator_options_label: QT GUI
