@@ -466,6 +466,7 @@ class FlowGraph(Element):
 
         # build the blocks
         self.options_block.import_data(name='', **data.get('options', {}))
+        self.options_block.insert_grc_parameters(data['options']['parameters'])
         self.blocks.append(self.options_block)
 
         for block_data in data.get('blocks', []):

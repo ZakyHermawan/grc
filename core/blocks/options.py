@@ -189,6 +189,7 @@ class Options(Block):
         from gnuradio import eng_notation
         % endif
     """
+
     templates['imports'] = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n".format(
         "from gnuradio import gr",
         "from gnuradio.filter import firdes",
@@ -204,14 +205,14 @@ class Options(Block):
         "from gnuradio import eng_notation",
         r"% endif",
     )
+
     cpp_templates = MakoTemplates(includes=['#include <gnuradio/topblock.h>'])
     file_format = 1
 
     def __init__(self, parent):
         super().__init__(parent)
-        parent_platform = parent.parent_platform
-
-        self.workflows = parent_platform.workflow_manager.workflows # get all available workflow objects
+        self.parent_platform = parent.parent_platform
+        self.workflows = self.parent_platform.workflow_manager.workflows # get all available workflow objects
         self.codegen_options = dict() # key: output_language, val: list of generator_options
         self.parse_workflows()
 
@@ -232,6 +233,36 @@ class Options(Block):
         self.update_params_based_on_generate_options()
         self.update_params_based_on_run()
 
+    def insert_grc_parameters(self, grc_parameters):
+        """
+        Update parameters with values from the grc file
+        Args:
+            grc_parameters (str): option block parameter values from grc
+        """
+        self.params['title'].value = grc_parameters['title']
+        self.params['author'].value = grc_parameters['author']
+        self.params['copyright'].value = grc_parameters['copyright']
+        self.params['description'].value = grc_parameters['description']
+        self.params['output_language'].value = grc_parameters['output_language']
+        self.params['generate_options'].value = grc_parameters['generate_options']
+        self.params['gen_linking'].value = grc_parameters['gen_linking']
+        self.params['gen_cmake'].value = grc_parameters['gen_cmake']
+        self.params['cmake_opt'].value = grc_parameters['cmake_opt']
+        self.params['category'].value = grc_parameters['category']
+        self.params['run_options'].value = grc_parameters['run_options']
+        self.params['placement'].value = grc_parameters['placement']
+        self.params['window_size'].value = grc_parameters['window_size']
+        self.params['sizing_mode'].value = grc_parameters['sizing_mode']
+        self.params['run'].value = grc_parameters['run']
+        self.params['max_nouts'].value = grc_parameters['max_nouts']
+        self.params['realtime_scheduling'].value = grc_parameters['realtime_scheduling']
+        self.params['qt_qss_theme'].value = grc_parameters['qt_qss_theme']
+        self.params['thread_safe_setters'].value = grc_parameters['thread_safe_setters']
+        self.params['catch_exceptions'].value = grc_parameters['catch_exceptions']
+        self.params['run_command'].value = grc_parameters['run_command']
+        self.params['hier_block_src_path'].value = grc_parameters['hier_block_src_path']
+        self.parent.validate() # validiate the flow graph
+
     def update_params_based_on_generate_options(self) -> None:
         current_generate_options = self.params['generate_options'].get_value()
         if current_generate_options.startswith('hb'):
@@ -240,7 +271,6 @@ class Options(Block):
         else:
             self.params['category'].hide = 'all'
             self.params['max_nouts'].hide = 'none' if self.params['max_nouts'].get_value() != '0' else 'part'
-        print(current_generate_options)
     
     def update_params_based_on_run(self) -> None:
         self.templates['callbacks'] = [
