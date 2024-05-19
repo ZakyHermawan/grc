@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 from copy import copy
 
 from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB
-from qtpy.QtCore import Qt
+from qtpy.QtCore import Qt, QSignalBlocker
 from qtpy.QtGui import QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
@@ -62,6 +62,8 @@ class PropsDialog(QDialog):
         self.qsettings = QApplication.instance().qsettings
         self.setModal(True)
         self.force_show_id = force_show_id
+        self.layout = QVBoxLayout()
+
 
         self.setWindowTitle(f"Properties: {self._block.label}")
 
@@ -101,6 +103,7 @@ class PropsDialog(QDialog):
                             dropdown.addItem(opt)
                         dropdown.param_values = list(param.options)
                         dropdown.param = param
+                        dropdown.activated.connect(self.update)
                         qvb.addWidget(dropdown, i, 1)
                         self.edit_params.append(dropdown)
                         if param.dtype == "enum":
@@ -168,11 +171,46 @@ class PropsDialog(QDialog):
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-        self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
         self.layout.addWidget(self.buttonBox)
 
         self.setLayout(self.layout)
+
+    def update(self):
+        """
+        This function handle parameter update
+        Iterate through every widget in PropsDialog
+        Only update the necessary widgets
+        """
+        for i in range(self.layout.count()):
+            child = self.layout.itemAt(i).widget()
+            if child == self.tabs:
+                current_widget = child.currentWidget() # current tab
+                childrens = current_widget.findChildren(QWidget, options=Qt.FindDirectChildrenOnly)
+
+                i = 0
+                selected_output_language = ''
+                for param_gui in childrens:
+                    if param_gui.__class__ == QComboBox:
+                        """
+                        The first combo box is the output language parameter
+                        The second combo box is the generate options parameter
+                        """
+                        if i == 0:
+                            # 
+                            selected_output_language = param_gui.currentText()
+                        if i == 1:
+                            """
+                            Clear parameters, update output language with current selected output language
+                            then get generate options
+                            """
+                            param_gui.clear()
+                            self._block.rewrite(selected_output_language)
+                            self._block.params['output_language'].value = selected_output_language
+
+                            generate_options = self._block.params['generate_options']
+                            param_gui.addItems(generate_options.options.values())
+                        i += 1
 
     def accept(self):
         super().accept()

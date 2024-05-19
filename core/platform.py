@@ -239,8 +239,10 @@ class Platform(Element):
         block_id = data['id'] = data['id'].rstrip('_')
 
         if block_id in self.block_classes_build_in:
-            log.warning('Not overwriting build-in block %s with %s',
-                        block_id, file_path)
+            if block_id != 'options':
+                # option block will not be overwritten because it already implemented in blocks/options.py
+                log.warning('Not overwriting build-in block %s with %s',
+                    block_id, file_path)
             return
         if block_id in self.blocks:
             log.warning('Block with id "%s" loaded from\n  %s\noverwritten by\n  %s',
