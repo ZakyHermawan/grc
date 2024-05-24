@@ -65,8 +65,8 @@ class Options(Block):
             dict(id='gen_cmake',
                 label='Generate CMakeLists.txt',
                 dtype='enum',
-                default='on',
-                options=['on', 'off'],
+                default='On',
+                options=['On', 'Off'],
                 hide="${ ('part' if output_language == 'cpp' else 'all') }",
             ),
             dict(id='cmake_opt',
@@ -168,6 +168,10 @@ class Options(Block):
                 options='.:',
                 hide="part",
             ),
+            dict(id='generator_class_name',
+                dtype='string',
+                hide="all"
+            ),
         ],
         have_inputs=False,
         have_outputs=False,
@@ -175,38 +179,7 @@ class Options(Block):
         block_id=key,
     )
 
-    templates['imports'] = r"""from gnuradio import gr
-        from gnuradio.filter import firdes
-        from gnuradio.fft import window
-        import sys
-        import signal
-        % if generate_options == 'qt_gui':
-        from PyQt5 import Qt
-        % endif
-        % if not generate_options.startswith('hb'):
-        from argparse import ArgumentParser
-        from gnuradio.eng_arg import eng_float, intx
-        from gnuradio import eng_notation
-        % endif
-    """
-
-    templates['imports'] = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n".format(
-        "from gnuradio import gr",
-        "from gnuradio.filter import firdes",
-        "from gnuradio.fft import window",
-        "import sys",
-        "import signal",
-        r"% if generate_options == 'qt_gui':",
-        "from PyQt5 import Qt",
-        r"% endif",
-        r"% if not generate_options.startswith('hb'):",
-        "from argparse import ArgumentParser",
-        "from gnuradio.eng_arg import eng_float, intx",
-        "from gnuradio import eng_notation",
-        r"% endif",
-    )
-
-    cpp_templates = MakoTemplates(includes=['#include <gnuradio/topblock.h>'])
+    cpp_templates = MakoTemplates(includes=['#include <gnuradio/top_block.h>'])
     file_format = 1
 
     def __init__(self, parent):
@@ -232,6 +205,23 @@ class Options(Block):
 
         self.update_params_based_on_generate_options()
         self.update_params_based_on_run()
+
+        self.templates['imports'] = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n".format(
+            "from gnuradio import gr",
+            "from gnuradio.filter import firdes",
+            "from gnuradio.fft import window",
+            "import sys",
+            "import signal",
+            r"% if generate_options == 'qt_gui':",
+            "from PyQt5 import Qt",
+            r"% endif",
+            r"% if not generate_options.startswith('hb'):",
+            "from argparse import ArgumentParser",
+            "from gnuradio.eng_arg import eng_float, intx",
+            "from gnuradio import eng_notation",
+            r"% endif",
+        )
+
 
     def insert_grc_parameters(self, grc_parameters):
         """
@@ -261,6 +251,7 @@ class Options(Block):
         self.params['catch_exceptions'].value = grc_parameters['catch_exceptions']
         self.params['run_command'].value = grc_parameters['run_command']
         self.params['hier_block_src_path'].value = grc_parameters['hier_block_src_path']
+        self.update_generator_class()
         self.parent.validate() # validiate the flow graph
 
     def update_params_based_on_generate_options(self) -> None:
@@ -302,6 +293,7 @@ class Options(Block):
         self.params['generate_options'].options = tmp
         self.update_params_based_on_generate_options()
         self.update_params_based_on_run()
+        self.update_generator_class()
         super().rewrite()
 
     def parse_workflows(self) -> None:
@@ -323,3 +315,11 @@ class Options(Block):
                 self.codegen_options[output_language_pair] = []
             if generator_options_pair not in self.codegen_options[output_language_pair]:
                 self.codegen_options[output_language_pair].append(generator_options_pair)
+
+    def update_generator_class(self) -> None:
+        for workflow in self.workflows:
+            if workflow.output_language == self.params['output_language'].get_value() \
+                and workflow.generator_options == self.params['generate_options'].get_value():
+                self.params['generator_class_name'].set_value(workflow.generator_class)
+                self.generator_class_name = workflow.generator_class
+                return
