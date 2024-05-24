@@ -57,11 +57,8 @@ class ExecFlowGraphThread(threading.Thread):
         # it looks really ugly and confusing in the console panel.
         Messages.send_start_exec(' '.join(run_command_args))
 
-        dirname = Path(generator.file_path).parent
-
         return subprocess.Popen(
             args=run_command_args,
-            cwd=dirname,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True
         )
