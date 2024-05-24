@@ -9,7 +9,7 @@ from .hier_block import HierBlockGenerator, QtHierBlockGenerator
 from .top_block import TopBlockGenerator
 from .cpp_top_block import CppTopBlockGenerator
 from .cpp_hier_block import CppHierBlockGenerator
-
+import sys
 
 class Generator(object):
     """Adaptor for various generators (uses generate_options)"""
@@ -26,24 +26,9 @@ class Generator(object):
         self.generate_options = flow_graph.get_option('generate_options')
         self.output_language = flow_graph.get_option('output_language')
 
-        if self.output_language == 'python':
-
-            if self.generate_options == 'hb':
-                generator_cls = HierBlockGenerator
-            elif self.generate_options == 'hb_qt_gui':
-                generator_cls = QtHierBlockGenerator
-            else:
-                generator_cls = TopBlockGenerator
-
-        elif self.output_language == 'cpp':
-
-            if self.generate_options == 'hb':
-                generator_cls = CppHierBlockGenerator
-            elif self.generate_options == 'hb_qt_gui':
-                pass
-            else:
-                generator_cls = CppTopBlockGenerator
-
+        self.generator_class_name = flow_graph.get_option('generator_class_name')
+        generator_cls = getattr(sys.modules[__name__], self.generator_class_name)
+        
         self._generator = generator_cls(flow_graph, output_dir)
 
     def __getattr__(self, item):
