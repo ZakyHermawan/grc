@@ -229,29 +229,28 @@ class Options(Block):
         Args:
             grc_parameters (str): option block parameter values from grc
         """
-        self.params['title'].value = grc_parameters['title']
-        self.params['author'].value = grc_parameters['author']
-        self.params['copyright'].value = grc_parameters['copyright']
-        self.params['description'].value = grc_parameters['description']
-        self.params['output_language'].value = grc_parameters['output_language']
-        self.params['generate_options'].value = grc_parameters['generate_options']
-        self.params['gen_linking'].value = grc_parameters['gen_linking']
-        self.params['gen_cmake'].value = grc_parameters['gen_cmake']
-        self.params['cmake_opt'].value = grc_parameters['cmake_opt']
-        self.params['category'].value = grc_parameters['category']
-        self.params['run_options'].value = grc_parameters['run_options']
-        self.params['placement'].value = grc_parameters['placement']
-        self.params['window_size'].value = grc_parameters['window_size']
-        self.params['sizing_mode'].value = grc_parameters['sizing_mode']
-        self.params['run'].value = grc_parameters['run']
-        self.params['max_nouts'].value = grc_parameters['max_nouts']
-        self.params['realtime_scheduling'].value = grc_parameters['realtime_scheduling']
-        self.params['qt_qss_theme'].value = grc_parameters['qt_qss_theme']
-        self.params['thread_safe_setters'].value = grc_parameters['thread_safe_setters']
-        self.params['catch_exceptions'].value = grc_parameters['catch_exceptions']
-        self.params['run_command'].value = grc_parameters['run_command']
-        self.params['hier_block_src_path'].value = grc_parameters['hier_block_src_path']
-        self.update_generator_class()
+        self.params['title'].value = grc_parameters.get('title', 'Not titled yet')
+        self.params['author'].value = grc_parameters.get('author', '')
+        self.params['copyright'].value = grc_parameters.get('copyright', '')
+        self.params['description'].value = grc_parameters.get('description', '')
+        self.params['output_language'].value = grc_parameters.get('output_language', 'python')
+        self.params['generate_options'].value = grc_parameters.get('generate_options', 'qt_gui')
+        self.params['gen_linking'].value = grc_parameters.get('gen_linking', 'dynamic')
+        self.params['gen_cmake'].value = grc_parameters.get('gen_cmake', 'On')
+        self.params['cmake_opt'].value = grc_parameters.get('cmake_opt', '')
+        self.params['category'].value = grc_parameters.get('category', '[GRC Hier Blocks]')
+        self.params['run_options'].value = grc_parameters.get('run_options', 'prompt')
+        self.params['placement'].value = grc_parameters.get('placement', '(0, 0)')
+        self.params['window_size'].value = grc_parameters.get('window_size', '(1000, 1000)')
+        self.params['sizing_mode'].value = grc_parameters.get('sizing_mode', 'fixed')
+        self.params['run'].value = grc_parameters.get('run', 'True')
+        self.params['max_nouts'].value = grc_parameters.get('max_nouts', '0')
+        self.params['realtime_scheduling'].value = grc_parameters.get('realtime_scheduling', '')
+        self.params['qt_qss_theme'].value = grc_parameters.get('qt_qss_theme', '')
+        self.params['thread_safe_setters'].value = grc_parameters.get('thread_safe_setters', '')
+        self.params['catch_exceptions'].value = grc_parameters.get('catch_exceptions', 'True')
+        self.params['run_command'].value = grc_parameters.get('run_command', r'{python} -u {filename}')
+        self.params['hier_block_src_path'].value = grc_parameters.get('hier_block_src_path', '.:')
         self.parent.validate() # validiate the flow graph
 
     def update_params_based_on_generate_options(self) -> None:
