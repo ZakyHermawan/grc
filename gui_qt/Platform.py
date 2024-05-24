@@ -16,6 +16,7 @@ from .Config import Config
 from .components.canvas.flowgraph import Flowgraph
 from .components.canvas.block import Block
 from .components.canvas.port import Port
+# from .components.canvas.param import Param
 from .components.canvas.connection import Connection
 from ..core.platform import Platform as CorePlatform
 
