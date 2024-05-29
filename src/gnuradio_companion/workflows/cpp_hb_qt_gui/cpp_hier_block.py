@@ -191,9 +191,9 @@ class CppQtHierBlockGenerator(CppHierBlockGenerator):
         gui_hint_param['value'] = ''
         gui_hint_param['type'] = 'gui_hint'
         gui_hint_param['hide'] = 'part'
-        block_n['param'].append(gui_hint_param)
+        block_n['parameters'].append(gui_hint_param)
 
-        block_n['make'] += (
+        block_n['templates']['make'] += (
             "\n#set $win = 'self.%s' % $id"
             "\n${gui_hint()($win)}"
         )

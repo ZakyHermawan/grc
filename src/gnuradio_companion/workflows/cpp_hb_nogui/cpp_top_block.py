@@ -7,11 +7,10 @@ import re
 
 from mako.template import Template
 
-from .. import Messages, blocks
-from ..Constants import TOP_BLOCK_FILE_MODE
-from .FlowGraphProxy import FlowGraphProxy
-from ..utils import expr_utils
-from .top_block import TopBlockGenerator
+from ...core import Messages, blocks
+from ...core.Constants import TOP_BLOCK_FILE_MODE
+from ...core.generator.FlowGraphProxy import FlowGraphProxy
+from ...core.utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 
