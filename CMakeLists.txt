@@ -168,6 +168,12 @@ GR_PYTHON_INSTALL(
     FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl|png|mako)$"
 )
 
+GR_PYTHON_INSTALL(
+    DIRECTORY workflows
+    DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
+    FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl|png|mako)$"
+)
+
 ########################################################################
 # Append NSIS commands to set environment variables
 ########################################################################

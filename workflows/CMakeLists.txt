@@ -8,7 +8,7 @@
 ########################################################################
 include(GrPython)
 
-file(GLOB yml_files "*.workflow.yml")
+file(GLOB_RECURSE yml_files "*.workflow.yml")
 
 install(
     FILES ${yml_files}

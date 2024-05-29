@@ -2,7 +2,7 @@ id: python_nogui_workflow
 description: "python no gui workflow"
 output_language: python
 output_language_label: Python
-generator_module: generator
+generator_module: gnuradio.grc.workflows.python_nogui
 generator_class: TopBlockGenerator
 generator_options: no_gui
 generator_options_label: No Gui

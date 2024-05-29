@@ -2,7 +2,7 @@ id: python_hb_nogui_workflow
 description: "python hier block no gui workflow"
 output_language: python
 output_language_label: Python
-generator_module: generator
+generator_module: gnuradio.grc.workflows.python_hb_nogui
 generator_class: HierBlockGenerator
 generator_options: hb
 generator_options_label: Hier Block
