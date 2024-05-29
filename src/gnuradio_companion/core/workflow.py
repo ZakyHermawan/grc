@@ -15,6 +15,7 @@ class Workflow:
         output_language (str): target language
         output_language_label (str): Information for users about the target language of the workflow
         generator_class (str): Name of the code generator class
+        generator_module (str): Module name of where the code generator class is located
         generator_options (str): Used to select a workflow
         generator_options_label (str): Information for users to select a workflow
         context (dict): additional workflow parameters
@@ -31,6 +32,7 @@ class Workflow:
         self.output_language = self.workflow_params.pop('output_language')
         self.output_language_label = self.workflow_params.pop('output_language_label')
         self.generator_class = self.workflow_params.pop('generator_class')
+        self.generator_module = self.workflow_params.pop('generator_module')
         self.generator_options = self.workflow_params.pop('generator_options')
         self.generator_options_label = self.workflow_params.pop('generator_options_label')
         self.context = self.workflow_params # additional workflow parameters

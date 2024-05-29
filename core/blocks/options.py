@@ -172,6 +172,10 @@ class Options(Block):
                 dtype='string',
                 hide="all"
             ),
+            dict(id='generator_module',
+                dtype='string',
+                hide="all"
+            ),
         ],
         have_inputs=False,
         have_outputs=False,
@@ -320,5 +324,6 @@ class Options(Block):
             if workflow.output_language == self.params['output_language'].get_value() \
                 and workflow.generator_options == self.params['generate_options'].get_value():
                 self.params['generator_class_name'].set_value(workflow.generator_class)
+                self.params['generator_module'].set_value(workflow.generator_module)
                 self.generator_class_name = workflow.generator_class
                 return
