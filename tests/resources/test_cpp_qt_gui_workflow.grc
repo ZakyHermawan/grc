@@ -3,6 +3,10 @@ options:
     alias: ''
     author: rootkid
     catch_exceptions: 'True'
+<<<<<<< HEAD
+=======
+    category: '[GRC Hier Blocks]'
+>>>>>>> fbacefb (make tests for all workflows)
     cmake_opt: ''
     comment: ''
     copyright: ''
@@ -16,12 +20,24 @@ options:
     id: test_cpp_qt_gui_workflow
     max_nouts: '0'
     output_language: cpp
+<<<<<<< HEAD
+=======
+    placement: (0, 0)
+>>>>>>> fbacefb (make tests for all workflows)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
+<<<<<<< HEAD
     thread_safe_setters: ''
     title: Not titled yet
+=======
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000, 1000)
+>>>>>>> fbacefb (make tests for all workflows)
   states:
     bus_sink: false
     bus_source: false
@@ -191,4 +207,8 @@ connections:
 
 metadata:
   file_format: 1
+<<<<<<< HEAD
   grc_version: v3.10.0.0git-1489-g07ad53d3
+=======
+  grc_version: v3.10.0.0git-1478-gb0bd8f02
+>>>>>>> fbacefb (make tests for all workflows)

@@ -7,7 +7,10 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
+<<<<<<< HEAD
     current_workflow: python_hb_nogui_workflow
+=======
+>>>>>>> fbacefb (make tests for all workflows)
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
@@ -26,7 +29,11 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
+<<<<<<< HEAD
     title: python hb no gui
+=======
+    title: Not titled yet
+>>>>>>> fbacefb (make tests for all workflows)
     window_size: (1000, 1000)
   states:
     bus_sink: false
@@ -117,4 +124,8 @@ connections:
 
 metadata:
   file_format: 1
+<<<<<<< HEAD
   grc_version: v3.10.0.0git-1489-g07ad53d3
+=======
+  grc_version: v3.10.0.0git-1478-gb0bd8f02
+>>>>>>> fbacefb (make tests for all workflows)

@@ -3,9 +3,19 @@ options:
     alias: ''
     author: rootkid
     catch_exceptions: 'True'
+<<<<<<< HEAD
     comment: ''
     copyright: ''
     description: ''
+=======
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+>>>>>>> fbacefb (make tests for all workflows)
     generate_options: bokeh_gui
     generator_class_name: TopBlockGenerator
     generator_module: gnuradio.grc.workflows.python_bokeh_gui
@@ -193,4 +203,8 @@ connections:
 
 metadata:
   file_format: 1
+<<<<<<< HEAD
   grc_version: v3.10.0.0git-1481-g81a99d68
+=======
+  grc_version: v3.10.0.0git-1478-gb0bd8f02
+>>>>>>> fbacefb (make tests for all workflows)

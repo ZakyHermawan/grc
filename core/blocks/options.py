@@ -280,7 +280,7 @@ class Options(Block):
         """
         Element.rewrite(self)
 
-        choosen_language = updated_language if updated_language else self.params['output_language'].value
+        choosen_language = updated_language if updated_language else self.params['output_language'].get_value()
         output_language_pair = ()
         for output_language, output_language_label in self.codegen_options.keys():
             if choosen_language == output_language or choosen_language == output_language_label:
@@ -320,10 +320,12 @@ class Options(Block):
                 self.codegen_options[output_language_pair].append(generator_options_pair)
 
     def update_generator_class(self) -> None:
+        """
+        Update the generator_class_name and generator_module parameters based on the current output language
+        """
         for workflow in self.workflows:
             if workflow.output_language == self.params['output_language'].get_value() \
                 and workflow.generator_options == self.params['generate_options'].get_value():
                 self.params['generator_class_name'].set_value(workflow.generator_class)
                 self.params['generator_module'].set_value(workflow.generator_module)
-                self.generator_class_name = workflow.generator_class
                 return
