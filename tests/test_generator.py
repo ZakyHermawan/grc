@@ -33,8 +33,7 @@ def test_generator():
     ]
 
     # read workflow files so it can be loaded by platform
-    block_paths = [
-        path.join(gr.prefix(), 'share', 'gnuradio', 'grc'),
+    workflow_paths = [
         path.join(path.dirname(__file__), '../workflows/cpp_hb_nogui'),
         path.join(path.dirname(__file__), '../workflows/cpp_hb_qt_gui'),
         path.join(path.dirname(__file__), '../workflows/cpp_nogui'),
@@ -51,7 +50,7 @@ def test_generator():
         prefs=None,
         version='0.0.0',
     )
-    platform.build_library(block_paths)
+    platform.build_library(workflow_paths)
 
     for grc_file in grc_files:
         flow_graph = platform.make_flow_graph(grc_file)
