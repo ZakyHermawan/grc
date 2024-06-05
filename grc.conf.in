@@ -4,6 +4,7 @@
 
 [grc]
 global_blocks_path = @blocksdir@
+global_workflows_path = @workflowsdir@
 local_blocks_path =
 examples_path = @examplesdir@
 default_flow_graph =

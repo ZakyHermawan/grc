@@ -12,5 +12,5 @@ file(GLOB_RECURSE yml_files "*.workflow.yml")
 
 install(
     FILES ${yml_files}
-    DESTINATION ${GRC_BLOCKS_DIR}
+    DESTINATION ${GRC_WORKFLOWS_DIR}
 )

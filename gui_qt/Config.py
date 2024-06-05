@@ -27,8 +27,10 @@ class Config(CoreConfig):
         paths_sources = (
             self.hier_block_lib_dir,
             os.environ.get('GRC_BLOCKS_PATH', ''),
+            os.environ.get('GRC_WORKFLOWS_DIR', ''),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
+            self._gr_prefs.get_string('grc', 'global_workflows_path', ''),
             self.qsettings.value('grc/custom_block_paths', ''),
         )
 

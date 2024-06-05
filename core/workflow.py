@@ -60,8 +60,6 @@ class WorkflowManager:
         log = logger.getChild('workflow_manager')
         log.setLevel(logging.DEBUG)
         wf = Workflow(filepath)
-        if wf in self.workflows:
-            print("File already parsed")
-        else:
+        if wf not in self.workflows:
             self.workflows.append(wf)
 
