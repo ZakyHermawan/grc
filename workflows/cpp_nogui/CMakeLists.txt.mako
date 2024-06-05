@@ -32,10 +32,6 @@ find_package(Gnuradio "${short_version}" COMPONENTS
     % endfor
 )
 
-% if generate_options == 'qt_gui':
-find_package(Qt5Widgets REQUIRED)
-set(CMAKE_AUTOMOC TRUE)
-% endif
 
 % if cmake_tuples:
 % for key, val in cmake_tuples:
@@ -57,9 +53,6 @@ find_package(${package})
 add_executable(${class_name} ${class_name}.cpp)
 target_link_libraries(${class_name}
     gnuradio::gnuradio-blocks
-    % if generate_options == 'qt_gui':
-    gnuradio::gnuradio-qtgui
-    % endif
     % if parameters:
     Boost::program_options
     % endif

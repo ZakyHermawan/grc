@@ -1,6 +1,4 @@
-% if not generate_options.startswith('hb'):
 #!/usr/bin/env python3
-% endif
 # -*- coding: utf-8 -*-
 <%def name="indent(code)">${ '\n        '.join(str(code).splitlines()) }</%def>
 #
@@ -24,10 +22,8 @@
 ########################################################
 ##Create Imports
 ########################################################
-% if generate_options in ['qt_gui','hb_qt_gui']:
 from PyQt5 import Qt
 from gnuradio import qtgui
-%endif
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}
@@ -71,7 +67,6 @@ def snippets_${section}(tb):
     class_name = flow_graph.get_option('id')
     param_str = ', '.join(['self'] + ['%s=%s'%(param.name, param.templates.render('make')) for param in parameters])
 %>\
-% if generate_options == 'qt_gui':
 class ${class_name}(gr.top_block, Qt.QWidget):
 
     def __init__(${param_str}):
@@ -103,60 +98,6 @@ class ${class_name}(gr.top_block, Qt.QWidget):
                 self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
-% elif generate_options == 'bokeh_gui':
-
-class ${class_name}(gr.top_block):
-    def __init__(${param_str}):
-        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
-        self.plot_lst = []
-        self.widget_lst = []
-% elif generate_options == 'no_gui':
-
-class ${class_name}(gr.top_block):
-
-    def __init__(${param_str}):
-        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
-% elif generate_options.startswith('hb'):
-    <% in_sigs = flow_graph.get_hier_block_stream_io('in') %>
-    <% out_sigs = flow_graph.get_hier_block_stream_io('out') %>
-
-
-% if generate_options == 'hb_qt_gui':
-class ${class_name}(gr.hier_block2, Qt.QWidget):
-% else:
-class ${class_name}(gr.hier_block2):
-% endif
-<%def name="make_io_sig(io_sigs)">\
-    <% size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in io_sigs] %>\
-    % if len(io_sigs) == 0:
-gr.io_signature(0, 0, 0)\
-    % elif len(io_sigs) == 1:
-gr.io_signature(1, 1, ${size_strs[0]})\
-    % else:
-gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
-    % endif
-</%def>\
-    def __init__(${param_str}):
-        gr.hier_block2.__init__(
-            self, "${ title }",
-            ${make_io_sig(in_sigs)},
-            ${make_io_sig(out_sigs)},
-        )
-    % for pad in flow_graph.get_hier_block_message_io('in'):
-        self.message_port_register_hier_in("${ pad['label'] }")
-    % endfor
-    % for pad in flow_graph.get_hier_block_message_io('out'):
-        self.message_port_register_hier_out("${ pad['label'] }")
-    % endfor
-    % if generate_options == 'hb_qt_gui':
-
-        Qt.QWidget.__init__(self)
-        self.top_layout = Qt.QVBoxLayout()
-        self.top_grid_layout = Qt.QGridLayout()
-        self.top_layout.addLayout(self.top_grid_layout)
-        self.setLayout(self.top_layout)
-    % endif
-% endif
 % if flow_graph.get_option('thread_safe_setters'):
 
         self._lock = threading.RLock()
@@ -224,7 +165,6 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
 ########################################################
 ## QT sink close method reimplementation
 ########################################################
-% if generate_options == 'qt_gui':
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "${class_name}")
@@ -245,7 +185,6 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         except Exception as e:
             self.logger.error(f"setting stylesheet: {str(e)}")
     % endif
-% endif
 ##
 ##
 ##
@@ -278,7 +217,6 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
 ##  For top block code, generate a main routine.
 ##  Instantiate the top block and run as gui or cli.
 ########################################################
-% if not generate_options.startswith('hb'):
 <% params_eq_list = list() %>
 % if parameters:
 
@@ -327,7 +265,6 @@ def main(top_block_cls=${class_name}, options=None):
     if gr.enable_realtime_scheduling() != gr.RT_OK:
         gr.logger("realtime").warn("Error: failed to enable real-time scheduling.")
     % endif
-    % if generate_options == 'qt_gui':
 
     qapp = Qt.QApplication(sys.argv)
 
@@ -361,68 +298,6 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     % endfor
     qapp.exec_()
-    % elif generate_options == 'bokeh_gui':
-    # Create Top Block instance
-    tb = top_block_cls(${ ', '.join(params_eq_list) })
-    ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
-    try:
-        tb.start()
-        ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
-        bokehgui.utils.run_server(tb, sizing_mode = "${flow_graph.get_option('sizing_mode')}",  widget_placement =  ${flow_graph.get_option('placement')}, window_size =  ${flow_graph.get_option('window_size')})
-    finally:
-        tb.logger.info("Exiting the simulation. Stopping Bokeh Server")
-        tb.stop()
-        tb.wait()
-        ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
-    % elif generate_options == 'no_gui':
-    tb = top_block_cls(${ ', '.join(params_eq_list) })
-    ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
-    def sig_handler(sig=None, frame=None):
-        % for m in monitors:
-        % if m.params['en'].get_value() == 'True':
-        tb.${m.name}.stop()
-        % endif
-        % endfor
-        tb.stop()
-        tb.wait()
-        ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
-        sys.exit(0)
-
-    signal.signal(signal.SIGINT, sig_handler)
-    signal.signal(signal.SIGTERM, sig_handler)
-
-    % if flow_graph.get_option('run_options') == 'prompt':
-    tb.start(${ flow_graph.get_option('max_nouts') or '' })
-    ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
-    % for m in monitors:
-    % if m.params['en'].get_value() == 'True':
-    tb.${m.name}.start()
-    % endif
-    % endfor
-    try:
-        input('Press Enter to quit: ')
-    except EOFError:
-        pass
-    tb.stop()
-    ## ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
-    % elif flow_graph.get_option('run_options') == 'run':
-    tb.start(${flow_graph.get_option('max_nouts') or ''})
-    ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
-    % for m in monitors:
-    % if m.params['en'].get_value() == 'True':
-    tb.${m.name}.start()
-    % endif
-    % endfor
-    % endif
-    tb.wait()
-    ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
-    % for m in monitors:
-    % if m.params['en'].get_value() == 'True':
-    tb.${m.name}.stop()
-    % endif
-    % endfor
-    % endif
 
 if __name__ == '__main__':
     main()
-% endif
