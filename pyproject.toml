@@ -11,6 +11,7 @@ dynamic = ["version", "description"]
 
 [project.scripts]
 grc = "grc.main:main"
+grcc = "grc.compiler:main"
 
 [project.urls]
 Home = "https://github.com/ZakyHermawan/"
