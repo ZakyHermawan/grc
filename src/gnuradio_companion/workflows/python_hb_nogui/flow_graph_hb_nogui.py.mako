@@ -25,6 +25,11 @@
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}
 % endfor
+from gnuradio import gr
+from gnuradio.filter import firdes
+from gnuradio.fft import window
+import sys
+import signal
 
 ########################################################
 ##Prepare snippets

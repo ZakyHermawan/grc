@@ -6,3 +6,23 @@ generator_module: gnuradio.grc.workflows.cpp_hb_qt_gui
 generator_class: CppQtHierBlockGenerator
 generator_options: hb_qt_gui
 generator_options_label: Hier Block (QT GUI)
+parameters:
+-   id: gen_cmake
+    label: Generate CMakeLists.txt
+    dtype: enum
+    default: 'On'
+    options: ['On', 'Off']
+    # hide: 'part'
+    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+-   id: cmake_opt
+    label: CMake options
+    dtype: string
+    default: ''
+    # hide: 'all'
+    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+-   id: category
+    label: Category
+    dtype: string
+    default: '[GRC Hier Blocks]'
+    # hide: 'none'
+    hide: ${ ('none' if generate_options.startswith('hb') else 'all') }
