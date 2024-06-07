@@ -2,9 +2,11 @@ from . import Block, register_build_in
 from ._templates import MakoTemplates
 from ._build import build_params
 from ..base import Element
+from ..params import Param
 
 from copy import deepcopy
 from collections import OrderedDict, defaultdict
+import typing
 
 templates = MakoTemplates()
 
@@ -149,14 +151,15 @@ class Options(Block):
         self.params['hier_block_src_path'].value = grc_parameters.get('hier_block_src_path', '.:')
         self.parent.validate() # validiate the flow graph
 
-    def rewrite(self, updated_language='') -> None:
+    def rewrite(self) -> None:
         """
         Update generated_options each time the value of output_language is changed
         Update category parameter
         Args:
             updated_language (str): used to update generate_options param based on updated output language
         """
-        choosen_language = updated_language if updated_language else self.params['output_language'].get_value()
+
+        choosen_language = self.params['output_language'].get_value()
         output_language_pair = ()
         for output_language, output_language_label in self.codegen_options.keys():
             if choosen_language == output_language or choosen_language == output_language_label:
@@ -200,7 +203,6 @@ class Options(Block):
                 self.codegen_options[output_language_pair].append(generator_options_pair)
 
     def update_parameters_from_workflow(self) -> None:
-        params_raw = []
         new_params_from_workflow = self.current_workflow.parameters
         if new_params_from_workflow == None: # no additional parameter
             return
@@ -223,7 +225,6 @@ class Options(Block):
         #     flags=Block.flags,
         #     block_id=self.key,
         # )
-        # print((data['id'], param_factory(parent=self, **data)) for data in self.parameters_data)
         # self.params: typing.OrderedDict[str, Param] = OrderedDict(
         #     (data['id'], param_factory(parent=self, **data)) for data in self.parameters_data)
         # self.params['id'].hide = 'part'
@@ -234,11 +235,15 @@ class Options(Block):
         # this will also result in infinite recursion
         # od = OrderedDict()
         # for data in self.parameters_data:
+        #     data['origin'] = self.current_workflow.id
         #     od[data['id']] = param_factory(parent=self, **data)
         # self.params = od
 
         # the infinite recursion happened when the self.params is getting set to another value
         # ex: self.params = od
+
+        for data in new_params_data:
+            data['workflow_origin'] = self.current_workflow.id
 
         new_params: typing.OrderedDict[str, Param] = (OrderedDict(
             (data['id'], param_factory(parent=self, **data)) for data in new_params_data))

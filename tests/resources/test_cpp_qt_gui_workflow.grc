@@ -4,9 +4,12 @@ options:
     author: rootkid
     catch_exceptions: 'True'
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     category: '[GRC Hier Blocks]'
 >>>>>>> fbacefb (make tests for all workflows)
+=======
+>>>>>>> 22b93d3 (cleanup options block and bokeh gui workflow)
     cmake_opt: ''
     comment: ''
     copyright: ''
