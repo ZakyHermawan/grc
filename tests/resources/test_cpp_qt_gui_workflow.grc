@@ -17,7 +17,7 @@ options:
     id: test_cpp_qt_gui_workflow
     max_nouts: '0'
     output_language: cpp
-    placement: (0, 0)
+    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
@@ -26,7 +26,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Not titled yet
-    window_size: (1000, 1000)
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -196,4 +196,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.10.0.0git-1478-gb0bd8f02
+  grc_version: v3.10.0.0git-1481-g81a99d68

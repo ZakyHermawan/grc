@@ -18,6 +18,8 @@ class Workflow:
         generator_module (str): Module name of where the code generator class is located
         generator_options (str): Used to select a workflow
         generator_options_label (str): Information for users to select a workflow
+        parameters (arr of dict): parameters for options block
+        asserts (arr): array of assert statements
         context (dict): additional workflow parameters
     """
     def __init__(self, *args, **kwargs):
@@ -35,6 +37,8 @@ class Workflow:
         self.generator_module = self.workflow_params.pop('generator_module')
         self.generator_options = self.workflow_params.pop('generator_options')
         self.generator_options_label = self.workflow_params.pop('generator_options_label')
+        self.parameters = self.workflow_params.pop('parameters', None)
+        self.asserts = self.workflow_params.pop('asserts', None)
         self.context = self.workflow_params # additional workflow parameters
 
 

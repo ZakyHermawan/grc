@@ -18,6 +18,7 @@ GNU Radio version: ${config.version}
 /********************
 ** Create includes
 ********************/
+#include <gnuradio/top_block.h>
 % for inc in includes:
 ${inc}
 % endfor
