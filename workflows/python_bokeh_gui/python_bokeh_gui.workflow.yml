@@ -58,6 +58,3 @@ parameters:
     default: '{python} -u {filename}'
     # hide: 'part'
     hide: ${ ('all' if generate_options.startswith('hb') else 'part') }
-# asserts:
-# - len(placement) == 4 or len(placement) == 2
-# - all(i >= 0 for i in placement)

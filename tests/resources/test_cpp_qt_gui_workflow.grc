@@ -3,7 +3,6 @@ options:
     alias: ''
     author: rootkid
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
     copyright: ''
