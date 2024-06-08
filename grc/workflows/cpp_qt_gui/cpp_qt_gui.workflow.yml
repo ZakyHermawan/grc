@@ -39,8 +39,7 @@ parameters:
 -   id: qt_qss_theme
     label: QSS Theme
     dtype: file_open
-    # hide: ${ ('all' if generate_options != 'qt_gui' else ('none' if qt_qss_theme else
-    #     'part')) }
+    hide: ${ 'none' if qt_qss_theme else 'part' }
 -   id: run_command
     label: Run Command
     category: Advanced

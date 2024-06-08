@@ -208,6 +208,8 @@ class Options(Block):
         for each workflow, use pair for output_language, generator_options and their label
         then, put it on codegen_options
 
+        also insert parameters from workflow files into self.workflow_params
+
         structure of codegen_options will be
         codegen_options = {
             ...
@@ -254,6 +256,8 @@ class Options(Block):
         new_params_from_workflow = self.current_workflow.parameters
         if new_params_from_workflow == None: # no additional parameter
             return
+
+        # if the parameters already been updated for current workflow, then do nothing
         if self.params['current_workflow'].get_value() == self.current_workflow.id:
             return
 
@@ -265,9 +269,12 @@ class Options(Block):
         for param in additional_params:
             self.params[param['id']].hide = param.get('hide')
 
-        self.params['current_workflow'].value = self.current_workflow.id
+        self.params['current_workflow'].set_value(self.current_workflow.id)
 
     def update_current_workflow(self) -> None:
+        """
+        get current workflow based on the current value of output language and generate options
+        """
         for workflow in self.workflows:
             if workflow.output_language == self.params['output_language'].get_value() \
                 and workflow.generator_options == self.params['generate_options'].get_value():
