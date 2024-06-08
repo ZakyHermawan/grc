@@ -3,12 +3,6 @@ options:
     alias: ''
     author: rootkid
     catch_exceptions: 'True'
-<<<<<<< HEAD
-<<<<<<< HEAD
-    comment: ''
-    copyright: ''
-    description: ''
-=======
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -16,12 +10,6 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
->>>>>>> fbacefb (make tests for all workflows)
-=======
-    comment: ''
-    copyright: ''
-    description: ''
->>>>>>> 63330e6 (move workflow dependant parameters into its own workflow)
     generate_options: bokeh_gui
     generator_class_name: TopBlockGenerator
     generator_module: gnuradio.grc.workflows.python_bokeh_gui
@@ -209,12 +197,4 @@ connections:
 
 metadata:
   file_format: 1
-<<<<<<< HEAD
-<<<<<<< HEAD
   grc_version: v3.10.0.0git-1481-g81a99d68
-=======
-  grc_version: v3.10.0.0git-1478-gb0bd8f02
->>>>>>> fbacefb (make tests for all workflows)
-=======
-  grc_version: v3.10.0.0git-1481-g81a99d68
->>>>>>> 63330e6 (move workflow dependant parameters into its own workflow)

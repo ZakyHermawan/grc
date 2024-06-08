@@ -68,11 +68,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-<<<<<<< HEAD
-    coordinate: [408, 264.0]
-=======
     coordinate: [592, 192.0]
->>>>>>> fbacefb (make tests for all workflows)
     rotation: 0
     state: enabled
 - name: blocks_throttle2_0
@@ -93,11 +89,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-<<<<<<< HEAD
-    coordinate: [616, 184.0]
-=======
     coordinate: [800, 108.0]
->>>>>>> fbacefb (make tests for all workflows)
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -194,11 +186,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-<<<<<<< HEAD
-    coordinate: [784, 288.0]
-=======
     coordinate: [968, 216.0]
->>>>>>> fbacefb (make tests for all workflows)
     rotation: 0
     state: enabled
 
@@ -208,8 +196,4 @@ connections:
 
 metadata:
   file_format: 1
-<<<<<<< HEAD
   grc_version: v3.11.0.0git-792-g4b3c7066
-=======
-  grc_version: v3.10.0.0git-1478-gb0bd8f02
->>>>>>> fbacefb (make tests for all workflows)

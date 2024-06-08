@@ -11,5 +11,4 @@ parameters:
     label: Category
     dtype: string
     default: '[GRC Hier Blocks]'
-    # hide: 'none'
-    hide: ${ ('none' if generate_options.startswith('hb') else 'all') }
+    hide: 'none'

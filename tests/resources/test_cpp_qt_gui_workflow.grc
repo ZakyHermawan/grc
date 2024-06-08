@@ -3,13 +3,6 @@ options:
     alias: ''
     author: rootkid
     catch_exceptions: 'True'
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    category: '[GRC Hier Blocks]'
->>>>>>> fbacefb (make tests for all workflows)
-=======
->>>>>>> 22b93d3 (cleanup options block and bokeh gui workflow)
     cmake_opt: ''
     comment: ''
     copyright: ''
@@ -23,32 +16,15 @@ options:
     id: test_cpp_qt_gui_workflow
     max_nouts: '0'
     output_language: cpp
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    placement: (0, 0)
->>>>>>> fbacefb (make tests for all workflows)
-=======
     placement: (0,0)
->>>>>>> 63330e6 (move workflow dependant parameters into its own workflow)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-<<<<<<< HEAD
-    thread_safe_setters: ''
-    title: Not titled yet
-=======
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Not titled yet
-<<<<<<< HEAD
-    window_size: (1000, 1000)
->>>>>>> fbacefb (make tests for all workflows)
-=======
-    window_size: (1000,1000)
->>>>>>> 63330e6 (move workflow dependant parameters into its own workflow)
   states:
     bus_sink: false
     bus_source: false
@@ -218,12 +194,4 @@ connections:
 
 metadata:
   file_format: 1
-<<<<<<< HEAD
-<<<<<<< HEAD
-  grc_version: v3.10.0.0git-1489-g07ad53d3
-=======
-  grc_version: v3.10.0.0git-1478-gb0bd8f02
->>>>>>> fbacefb (make tests for all workflows)
-=======
   grc_version: v3.10.0.0git-1481-g81a99d68
->>>>>>> 63330e6 (move workflow dependant parameters into its own workflow)
