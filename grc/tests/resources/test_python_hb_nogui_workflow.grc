@@ -7,6 +7,7 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
+    current_workflow: python_hb_nogui_workflow
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
@@ -25,7 +26,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Not titled yet
+    title: python hb no gui
     window_size: (1000, 1000)
   states:
     bus_sink: false
@@ -116,4 +117,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.10.0.0git-1478-gb0bd8f02
+  grc_version: v3.10.0.0git-1489-g07ad53d3

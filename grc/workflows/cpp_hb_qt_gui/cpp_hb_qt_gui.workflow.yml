@@ -12,17 +12,14 @@ parameters:
     dtype: enum
     default: 'On'
     options: ['On', 'Off']
-    # hide: 'part'
-    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+    hide: 'part'
 -   id: cmake_opt
     label: CMake options
     dtype: string
     default: ''
-    # hide: 'all'
-    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+    hide: 'all'
 -   id: category
     label: Category
     dtype: string
     default: '[GRC Hier Blocks]'
-    # hide: 'none'
-    hide: ${ ('none' if generate_options.startswith('hb') else 'all') }
+    hide: 'none'
