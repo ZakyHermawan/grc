@@ -4,9 +4,13 @@ options:
     author: ''
     catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
+    cmake_opt: ''
     comment: ''
     copyright: ''
+    current_workflow: cpp_qt_gui_workflow
     description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
     generate_options: qt_gui
     generator_class_name: CppTopBlockGenerator
     generator_module: gnuradio.grc.workflows.cpp_qt_gui
@@ -23,7 +27,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: horn
-    window_size: ''
+    window_size: (1000, 1000)
   states:
     bus_sink: false
     bus_source: false
@@ -87,4 +91,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.10.0.0git-1481-g81a99d68
+  grc_version: v3.10.0.0git-1489-g07ad53d3

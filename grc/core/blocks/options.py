@@ -117,6 +117,7 @@ class Options(Block):
                 hide="all",
             ),
         ]
+        self.default_ids = ['title', 'author', 'copyright', 'description', 'output_language', 'generate_options', 'gen_linking', 'thread_safe_setters', 'catch_exceptions', 'hier_block_src_path']
         self.parent_platform = parent.parent_platform
         self.workflows = self.parent_platform.workflow_manager.workflows # get all available workflow objects
         self.codegen_options = dict() # key: output_language, val: list of generator_options
@@ -149,6 +150,9 @@ class Options(Block):
 
         super().__init__(parent)
         self.build_workflow_params()
+        for key, _ in self.params.items():
+            if key not in self.default_ids:
+                self.params[key].hide = 'all'
 
     def insert_grc_parameters(self, grc_parameters):
         """
@@ -265,6 +269,10 @@ class Options(Block):
         for param in self.workflow_params:
             if param['workflow'] == self.current_workflow.id:
                 additional_params.append(param)
+
+        for key, _ in self.params.items():
+            if key not in self.default_ids:
+                self.params[key].hide = 'all'
 
         for param in additional_params:
             self.params[param['id']].hide = param.get('hide')

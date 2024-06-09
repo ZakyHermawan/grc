@@ -31,7 +31,7 @@ from gnuradio.filter import firdes
 from gnuradio.fft import window
 import sys
 import signal
-
+import bokehgui
 ########################################################
 ##Prepare snippets
 ########################################################
