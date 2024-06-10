@@ -6,6 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 
 import os
+import fnmatch
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
 
@@ -40,6 +41,16 @@ class Config(object):
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_workflows_path', ''),
         )
+
+        # get every folder that contains YAML files
+        dirs = set()
+        for root, _, filenames in os.walk(os.path.join(os.path.dirname(__file__), '..')):
+            for _ in fnmatch.filter(filenames, '*.yml'):
+                dirs.add(root)
+                break
+
+        for dir in dirs:
+            paths_sources = paths_sources + (dir, )
 
         collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])
