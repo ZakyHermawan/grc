@@ -17,7 +17,7 @@ parameters:
     label: CMake options
     dtype: string
     default: ''
-    hide: 'all'
+    hide: 'part'
 -   id: category
     label: Category
     dtype: string

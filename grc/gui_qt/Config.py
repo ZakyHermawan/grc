@@ -1,4 +1,5 @@
 import os
+import fnmatch
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
 from gnuradio import gr
@@ -36,6 +37,16 @@ class Config(CoreConfig):
             self.qsettings.value('grc/custom_block_paths', ''),
             os.path.join(gr.prefix(), 'share', 'gnuradio', 'grc', 'blocks'),
         )
+
+        # get every folder that contains YAML files
+        dirs = set()
+        for root, _, filenames in os.walk(os.path.join(os.path.dirname(__file__), '..')):
+            for _ in fnmatch.filter(filenames, '*.yml'):
+                dirs.add(root)
+                break
+
+        for dir in dirs:
+            paths_sources = paths_sources + (dir, )
 
         collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])
