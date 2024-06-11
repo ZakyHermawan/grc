@@ -135,6 +135,16 @@ class Options(Block):
         self.codegen_options = dict() # key: output_language, val: list of generator_options
         self.current_workflow = None
         self.workflow_params = []
+        """
+        self.workflow_params would be:
+        [
+            {
+                'workflow_id': workflow id,
+                'params': Param,
+            },
+            ...
+        ]
+        """
 
         self.parse_workflows()
 
@@ -162,71 +172,13 @@ class Options(Block):
 
         super().__init__(parent)
 
-    def insert_grc_parameters(self, grc_parameters):
-        """
-        Update parameters with values from the grc file
-        Args:
-            grc_parameters (str): option block parameter values from grc
-        """
-        self.params['output_language'].value = grc_parameters.get('output_language')
-        self.params['generate_options'].value = grc_parameters.get('generate_options')
-        self.update_current_workflow()
-
-        for i in range(len(self.workflow_params)):
-            self.workflow_params[i]['params']['id'].value = grc_parameters.get('id')
-            for default_id in self.default_ids:
-                if default_id == 'output_language' or default_id == 'generate_options':
-                    continue
-                self.workflow_params[i]['params'][default_id].value = grc_parameters.get(default_id)
-
-        self.params = self.get_params_by_workflow_id(self.current_workflow.id)
-        self.parent.validate() # validiate the flow graph
-
-    def rewrite(self) -> None:
-        """        
-        Update generated_options each time the value of output_language is changed
-        Update category parameter
-        """
-        self.update_current_workflow()
-        latest_outlang = self.params['output_language'].value
-        latest_genopt = self.params['generate_options'].value
-        self.params = self.get_params_by_workflow_id(self.current_workflow.id)
-
-        self.params['output_language'].value = latest_outlang
-        self.params['generate_options'].value = latest_genopt
-
-        choosen_language = self.params['output_language'].value
-        output_language_pair = ()
-        for output_language, output_language_label in self.codegen_options.keys():
-            if choosen_language == output_language:
-                output_language_pair = (output_language, output_language_label)
-                break
-
-        list_of_generated_options_pair = self.codegen_options[output_language_pair]
-
-        tmp_dct = OrderedDict()
-        tmp_dct.attributes = defaultdict(dict)
-        for generated_options, generated_options_label in list_of_generated_options_pair:
-            tmp_dct[generated_options] = generated_options_label
-        self.params['generate_options'].options = tmp_dct
-
-        self.update_generator_class()
-        Element.rewrite(self)
-        super().rewrite()
-        return
-
-    def get_params_by_workflow_id(self, id) -> OrderedDict[str, Param]:
-        for wf in self.workflow_params:
-            if wf['workflow_id'] == id:
-                return wf['params']
-
     def parse_workflows(self) -> None:
         """
         Read all workflow yml file
         for each workflow, use pair for output_language, generator_options and their label
         then, put it on codegen_options
 
-        also insert parameters from workflow files into self.workflow_params
+        Also make new params from current workflow
 
         structure of codegen_options will be
         codegen_options = {
@@ -245,10 +197,7 @@ class Options(Block):
         for workflow in self.workflows:
             tmp = dict()
             tmp['workflow_id'] = workflow.id
-            from copy import deepcopy
-            arr = deepcopy(self.raw_params_data)
-
-            tmp['params'] = self.new_params_from_list(arr + workflow.parameters)
+            tmp['params'] = self.new_params_from_list(self.raw_params_data + workflow.parameters)
             tmp['params']['output_language'].set_value(workflow.output_language)
             tmp['params']['generate_options'].set_value(workflow.generator_options)
 
@@ -275,10 +224,97 @@ class Options(Block):
 
             self.workflow_params.append(tmp)
 
+    def insert_grc_parameters(self, grc_parameters):
+        """
+        Update parameters with values from the grc file
+        Args:
+            grc_parameters (str): option block parameter values from grc
+        """
+        self.params['output_language'].value = grc_parameters.get('output_language')
+        self.params['generate_options'].value = grc_parameters.get('generate_options')
+        self.update_current_workflow()
+
+        # fill default values of each workflow parameters from grc_parameters
+        for i in range(len(self.workflow_params)):
+            self.workflow_params[i]['params']['id'].value = grc_parameters.get('id')
+            for default_id in self.default_ids:
+                # the value of output_language and generate_options already been defined in parse_workflows
+                if default_id == 'output_language' or default_id == 'generate_options':
+                    continue
+                self.workflow_params[i]['params'][default_id].value = grc_parameters.get(default_id)
+
+        self.params = self.get_params_by_workflow_id(self.current_workflow.id)
+        self.parent.validate() # validiate the flow graph
+
+    def rewrite(self) -> None:
+        """
+        Get parameters based on current workflow
+        Update generated_options each time the value of output_language is changed
+        Update generator class based on current workflow
+        """
+        self.update_current_workflow()
+        latest_outlang = self.params['output_language'].value
+        latest_genopt = self.params['generate_options'].value
+        self.params = self.get_params_by_workflow_id(self.current_workflow.id)
+
+        # re assign old values since self.params been re assigned
+        self.params['output_language'].value = latest_outlang
+        self.params['generate_options'].value = latest_genopt
+
+        # re assign options of generate_options based on current output language
+        choosen_language = self.params['output_language'].value
+        output_language_pair = ()
+        for output_language, output_language_label in self.codegen_options.keys():
+            if choosen_language == output_language:
+                output_language_pair = (output_language, output_language_label)
+                break
+
+        list_of_generated_options_pair = self.codegen_options[output_language_pair]
+
+        tmp_dct = OrderedDict()
+        tmp_dct.attributes = defaultdict(dict)
+        for generated_options, generated_options_label in list_of_generated_options_pair:
+            tmp_dct[generated_options] = generated_options_label
+        self.params['generate_options'].options = tmp_dct
+
+        self.update_generator_class()
+        Element.rewrite(self)
+        super().rewrite()
+        return
+
+    def update_current_workflow(self) -> None:
+        """
+        Get current workflow based on the current value of output language and generate options
+        """
+        for workflow in self.workflows:
+            if workflow.output_language == self.params['output_language'].get_value() \
+                and workflow.generator_options == self.params['generate_options'].get_value():
+                self.current_workflow = workflow
+                return
+
+    def get_params_by_workflow_id(self, id) -> OrderedDict[str, Param]:
+        """
+        Get params based on workflow id
+        Args:
+            id (int): workflow id
+        Return:
+            parameters: OrderedDict[str, Param]
+        """
+        for wf in self.workflow_params:
+            if wf['workflow_id'] == id:
+                return wf['params']
+
     def new_params_from_list(self, lst) -> OrderedDict[str, Param]:
+        """
+        Make new params from list of dictonary
+        Args:
+            lst (list): list of dictionary
+        Return:
+            parameters: OrderedDict[str, Param]
+        """
         param_factory = self.parent_platform.make_param
         new_params_data = build_params(
-            params_raw=lst.copy(),
+            params_raw=lst,
             have_inputs=False,
             have_outputs=False,
             flags=Block.flags,
@@ -287,16 +323,6 @@ class Options(Block):
         new_params: typing.OrderedDict[str, Param] = (OrderedDict(
             (data['id'], param_factory(parent=self, **data)) for data in new_params_data))
         return new_params
-
-    def update_current_workflow(self) -> None:
-        """
-        get current workflow based on the current value of output language and generate options
-        """
-        for workflow in self.workflows:
-            if workflow.output_language == self.params['output_language'].get_value() \
-                and workflow.generator_options == self.params['generate_options'].get_value():
-                self.current_workflow = workflow
-                return
 
     def update_generator_class(self) -> None:
         """
