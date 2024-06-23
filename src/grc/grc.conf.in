@@ -2,6 +2,7 @@
 # You may override any setting on a per-user basis by editing
 # ~/.gnuradio/config.conf
 
+# remove this file, and fix err
 [grc]
 global_blocks_path = @blocksdir@
 global_workflows_path = @workflowsdir@
