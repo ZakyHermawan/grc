@@ -1,17 +1,29 @@
 [build-system]
-requires = ["setuptools", "prebuilt_binaries", "lit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = [
+    "setuptools == 68.2.2", 
+    "Mako >= 1.1.0",
+#    "PyGObject >= 3.42.1",
+#    "pycairo >= 1.0",
+    "numpy",
+    "jsonschema",
+]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "grc"
-authors = [{name = "Zaky Hermawan", email = "zaky.hermawan9615@gmail.com"}]
-license = {file = "LICENSE"}
-classifiers = ["License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"]
-dynamic = ["version", "description"]
-
-[project.scripts]
-grc = "grc.main:main"
-grcc = "grc.compiler:main"
+version = "3.10.0.0"
+authors = [
+  { name="Zaky Hermawan", email="zaky.hermawan9615@gmail.com" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file="LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
 
 [project.urls]
-Home = "https://github.com/ZakyHermawan/"
+Homepage = "https://github.com/ZakyHermawan/grc"
+Issues = "https://github.com/ZakyHermawan/grc/issues"

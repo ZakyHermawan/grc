@@ -1,0 +1,58 @@
+for gi packages:
+because gi is installed via sudo apt, so just set requirements for pygobject should be enough, another installment grc python package installment will not resposible to check this
+
+note to install with sudo apt (from https://wiki.gnuradio.org/index.php?title=UbuntuInstall#Install_Dependencies):
+python3-gi python3-gi-cairo gir1.2-gtk-3.0 
+
+need to lock this package into minimum requirement:
+numpy
+jsonschema
+
+TODO:
+if(CMAKE_INSTALL_PREFIX STREQUAL "/usr") ...
+if(UNIX) ...
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
+    DESTINATION ${GR_PREFSDIR}
+)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
+    DESTINATION ${GR_PREFSDIR}
+)
+
+
+discuss (most of this is about CMakeLists.txt, especially in GRC):
+what does CMAKE_CROSSCOMPILING mean ? what should i do for this ? (ref: src/grc/CMakeLists)
+in file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_EXAMPLES_DIR} examplesdir)
+also this command:     set(examplesdir ${examplesdir}:/usr/local/${GRC_EXAMPLES_DIR})
+both command above will handle examples, but grc did not have example block, make a script to copy dummy example into correct folder, problem: 
+
+things i will ignore on cmake migration process, if something break, check this first:
+GR_REGISTER_COMPONENT
+get_filename_component
+file(TO_NATIVE_PATH ...)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/grc.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
+@ONLY)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/00-grc-docs.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
+@ONLY)
+########################################################################
+# Install (+ compile) python sources and data files
+########################################################################
+########################################################################
+# Append NSIS commands to set environment variables
+########################################################################
+########################################################################
+# Add subdirectories
+########################################################################
+
+
+
+
+notes:
+GR_PREFSDIR = /usr/local/etc/gnuradio/conf.d
+
