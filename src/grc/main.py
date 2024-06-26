@@ -15,11 +15,6 @@ import os
 import platform
 import sys
 
-
-def main_function():
-    print("hello world")
-main_function()
-exit(0)
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
 GNU Radio Companion (%s) -
 This program is part of GNU Radio.

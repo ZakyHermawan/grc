@@ -69,10 +69,16 @@ class Config(object):
 
     @property
     def default_flow_graph(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        print(f"dirpath: {dir_path}")
+        default_flow_graph = os.path.join(dir_path, 'default_flow_graph.grc')
+        print(f"default fg: {default_flow_graph}")
         user_default = (
             os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
             self._gr_prefs.get_string('grc', 'default_flow_graph', '') or
-            os.path.join(self.hier_block_lib_dir, 'default_flow_graph.grc')
+            os.path.join(self.hier_block_lib_dir, 'default_flow_graph.grc') or
+            default_flow_graph
+            # 'def'
         )
         return user_default if exists(user_default) else Constants.DEFAULT_FLOW_GRAPH
 
