@@ -1,6 +1,7 @@
 LICENSE
 README.md
 pyproject.toml
+setup.cfg
 src/grc/__init__.py
 src/grc/__main__.py
 src/grc/compiler.py
