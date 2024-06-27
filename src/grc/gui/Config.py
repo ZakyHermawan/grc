@@ -10,6 +10,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 import sys
 import os
 import configparser
+from distutils.spawn import find_executable
 
 from ..core.Config import Config as CoreConfig
 from . import Constants
@@ -81,7 +82,13 @@ class Config(CoreConfig):
 
     @property
     def xterm_executable(self):
-        return self._gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
+        executables = ['x-terminal-emulator', 'gnome-terminal', 'konsole', 'xfce4-terminal', 'urxvt', 'xterm', 'foot']
+        for executable in executables:
+            executable_path = find_executable(executable)
+            if executable_path:
+                return executable_path
+
+        return None
 
     @property
     def wiki_block_docs_url_prefix(self):

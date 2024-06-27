@@ -24,7 +24,7 @@ import sys
 import subprocess
 import cProfile
 import pstats
-
+from distutils.spawn import find_executable
 
 from typing import Union
 
@@ -1361,7 +1361,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if self.currentView.process_is_done():
             self.generate_triggered()
             if self.currentView.generator:
-                xterm = self.app.qsettings.value("grc/xterm_executable", "")
+                xterm = self.find_xterm_executable()
                 '''if self.config.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
                         Dialogs.show_missing_xterm(main, xterm)
@@ -1582,3 +1582,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.setCurrentIndex(fg_nr)
             result.append(self.currentFlowgraphScene.filename)
         return result
+
+    def find_xterm_executable(self):
+        executables = ['x-terminal-emulator', 'gnome-terminal', 'konsole', 'xfce4-terminal', 'urxvt', 'xterm', 'foot']
+        for executable in executables:
+            executable_path = find_executable(executable)
+            if executable_path:
+                return executable_path
+
+        return None

@@ -257,7 +257,6 @@ class MainWindow(Gtk.ApplicationWindow):
                 Messages.send_start_load(file_path)
             flow_graph = self._platform.make_flow_graph()
             flow_graph.grc_file_path = file_path
-            print("file_path:", file_path)
             page = Page(
                 self,
                 flow_graph=flow_graph,

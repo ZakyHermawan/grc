@@ -2,6 +2,7 @@ import os
 import fnmatch
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
+from distutils.spawn import find_executable
 
 from ..core.Config import Config as CoreConfig
 from qtpy import QtCore
@@ -18,6 +19,16 @@ class Config(CoreConfig):
         CoreConfig.__init__(self, *args, **kwargs)
         self.install_prefix = install_prefix
         self.qsettings = QtCore.QSettings(self.gui_prefs_file, QtCore.QSettings.IniFormat)
+    
+    @property
+    def xterm_executable(self):
+        executables = ['x-terminal-emulator', 'gnome-terminal', 'konsole', 'xfce4-terminal', 'urxvt', 'xterm', 'foot']
+        for executable in executables:
+            executable_path = find_executable(executable)
+            if executable_path:
+                return executable_path
+
+        return None
 
     @property
     def wiki_block_docs_url_prefix(self):

@@ -9,6 +9,7 @@ import os
 import fnmatch
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
+from gnuradio import gr
 
 from . import Constants
 
@@ -26,8 +27,7 @@ class Config(object):
         self.version = version
         self.version_parts = version_parts or version[1:].split(
             '-', 1)[0].split('.')[:3]
-        self.enabled_components = self._gr_prefs.get_string(
-            'grc', 'enabled_components', '')
+        self.enabled_components = gr.gr.build_time_enabled_components()
         if name:
             self.name = name
 
@@ -40,6 +40,7 @@ class Config(object):
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_workflows_path', ''),
+            gr.prefix()+'share/gnuradio/grc/blocks',
         )
 
         # get every folder that contains YAML files
@@ -48,6 +49,8 @@ class Config(object):
             for _ in fnmatch.filter(filenames, '*.yml'):
                 dirs.add(root)
                 break
+        
+        print(dirs)
 
         for dir in dirs:
             paths_sources = paths_sources + (dir, )
@@ -70,15 +73,12 @@ class Config(object):
     @property
     def default_flow_graph(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        print(f"dirpath: {dir_path}")
         default_flow_graph = os.path.join(dir_path, 'default_flow_graph.grc')
-        print(f"default fg: {default_flow_graph}")
         user_default = (
             os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
             self._gr_prefs.get_string('grc', 'default_flow_graph', '') or
             os.path.join(self.hier_block_lib_dir, 'default_flow_graph.grc') or
             default_flow_graph
-            # 'def'
         )
         return user_default if exists(user_default) else Constants.DEFAULT_FLOW_GRAPH
 
