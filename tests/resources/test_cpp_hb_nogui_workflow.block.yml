@@ -1,0 +1,33 @@
+id: test_cpp_hb_nogui_workflow
+label: Not titled yet
+category: '[GRC Hier Blocks]'
+flags:
+- cpp
+
+parameters: []
+
+inputs: []
+
+outputs: []
+
+templates:
+    import: 'from test_cpp_hb_nogui_workflow import test_cpp_hb_nogui_workflow  #
+        grc-generated hier_block'
+    make: 'test_cpp_hb_nogui_workflow()
+
+        this->connect(this->${id});'
+    callbacks: []
+
+cpp_templates:
+    includes:
+    - '#include "test_cpp_hb_nogui_workflow/test_cpp_hb_nogui_workflow.hpp"'
+    make: this->${id} = test_cpp_hb_nogui_workflow_sptr(make_test_cpp_hb_nogui_workflow());
+    declarations: test_cpp_hb_nogui_workflow_sptr ${id};
+    callbacks: []
+
+documentation: 'rootkid
+
+    /home/zaky/workspace/grc/tests/resources/test_cpp_hb_nogui_workflow'
+grc_source: ''
+
+file_format: 1

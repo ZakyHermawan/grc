@@ -1,3 +1,10 @@
 .pytest_cache
-resources/top_block.py
+__pycache__/
 tests/resources/tests/
+resources/horn/
+resources/test_cpp_hb_nogui_workflow/
+resources/test_cpp_nogui_workflow/
+resources/test_cpp_qt_gui_workflow/
+resources/top_block.py
+resources/test_python_nogui_workflow.py
+resources/test_python_qt_gui_workflow.py

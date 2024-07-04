@@ -24,7 +24,7 @@ import sys
 import subprocess
 import cProfile
 import pstats
-
+import shutil
 
 from typing import Union
 
@@ -1376,11 +1376,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if self.currentView.process_is_done():
             self.generate_triggered()
             if self.currentView.generator:
-                xterm = self.app.qsettings.value("grc/xterm_executable", "")
-                '''if self.config.xterm_missing() != xterm:
-                    if not os.path.exists(xterm):
-                        Dialogs.show_missing_xterm(main, xterm)
-                    self.config.xterm_missing(xterm)'''
+                program_names = [
+                    'x-terminal-emulator',
+                    'gnome-terminal',
+                    'konsole',
+                    'xfce4-terminal',
+                    'urxvt',
+                    'xterm',
+                    'foot'
+                ]
+                xterm = self.find_program(program_names)
                 if self.currentFlowgraphScene.saved and self.currentFlowgraphScene.filename:
                     # Save config before execution
                     # self.config.save()
@@ -1597,3 +1602,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.setCurrentIndex(fg_nr)
             result.append(self.currentFlowgraphScene.filename)
         return result
+
+    def find_program(self, program_names):
+        for name in program_names:
+            path = shutil.which(name)
+            if path is not None:
+                return path
+        return None

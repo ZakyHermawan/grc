@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 
+
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
 GNU Radio Companion (%s) -
 This program is part of GNU Radio.
