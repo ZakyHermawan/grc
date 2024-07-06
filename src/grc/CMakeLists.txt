@@ -115,20 +115,10 @@ else()  # APPLE CYGWIN
     set(GRC_XTERM_EXE "xterm")
 endif()
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/grc.conf.in
-    ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
-@ONLY)
-
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
     DESTINATION ${GR_PREFSDIR}
 )
-
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/00-grc-docs.conf.in
-    ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
-@ONLY)
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf

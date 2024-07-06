@@ -1,2 +1,3 @@
+__pycache__/
 build/
-src/grc.egg-info
+src/grc.egg-info/

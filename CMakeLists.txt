@@ -1,2 +1,10 @@
 add_subdirectory(src/grc)
 add_subdirectory(tests)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/grc/grc.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
+@ONLY)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/grc/00-grc-docs.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
+@ONLY)

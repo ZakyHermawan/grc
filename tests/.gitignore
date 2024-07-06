@@ -1,6 +1,6 @@
 .pytest_cache
 __pycache__/
-tests/resources/tests/
+resources/tests/
 resources/horn/
 resources/test_cpp_hb_nogui_workflow/
 resources/test_cpp_nogui_workflow/
