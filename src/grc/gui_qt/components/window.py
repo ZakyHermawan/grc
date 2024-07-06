@@ -1385,7 +1385,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                     'xterm',
                     'foot'
                 ]
-                xterm = self.find_program(program_names)
+                xterm = self.app.qsettings.value("grc/xterm_executable", "") or self.find_program(program_names)
                 if self.currentFlowgraphScene.saved and self.currentFlowgraphScene.filename:
                     # Save config before execution
                     # self.config.save()
@@ -1604,6 +1604,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         return result
 
     def find_program(self, program_names):
+        """
+        Check if either program in program_name can be executed in command line
+        simulating find_program in cmake
+
+        Args:
+            program_names: list of programs to check if either of them can be executed
+
+        Returns:
+            program name if from program_names if it can be executed, else return None
+        """
         for name in program_names:
             path = shutil.which(name)
             if path is not None:
