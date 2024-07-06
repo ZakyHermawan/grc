@@ -1,4 +1,4 @@
 __pycache__/
 build/
-src/grc.egg-info/
+src/gnuradio_companion.egg-info/
 .pytest_cache/

@@ -96,7 +96,7 @@ def run_main():
     sys.exit(main())
 
 
-if __name__ == '__main__':
+def main():
     check_gnuradio_import()
     check_gtk()
     check_blocks_path()

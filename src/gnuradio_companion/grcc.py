@@ -48,7 +48,6 @@ def run_main():
         from grc.compiler import main
     exit(main())
 
-
-if __name__ == '__main__':
+def main():
     check_gnuradio_import()
     run_main()
