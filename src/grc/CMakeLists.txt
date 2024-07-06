@@ -115,16 +115,6 @@ else()  # APPLE CYGWIN
     set(GRC_XTERM_EXE "xterm")
 endif()
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
-    DESTINATION ${GR_PREFSDIR}
-)
-
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
-    DESTINATION ${GR_PREFSDIR}
-)
-
 ########################################################################
 # Install (+ compile) python sources and data files
 ########################################################################

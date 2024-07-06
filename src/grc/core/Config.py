@@ -8,6 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
+from gnuradio import gr
 
 from ..main import get_state_directory, get_config_file_path
 from . import Constants
@@ -37,6 +38,7 @@ class Config(object):
             os.environ.get('GRC_BLOCKS_PATH', ''),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
+            os.path.join(gr.prefix(), 'share', 'gnuradio', 'grc', 'blocks')
         )
 
         collected_paths = sum((paths.split(os.pathsep)

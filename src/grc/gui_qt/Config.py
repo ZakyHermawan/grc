@@ -1,6 +1,7 @@
 import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
+from gnuradio import gr
 
 from ..core.Config import Config as CoreConfig
 from ..main import get_config_file_path
@@ -31,6 +32,7 @@ class Config(CoreConfig):
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
             self.qsettings.value('grc/custom_block_paths', ''),
+            os.path.join(gr.prefix(), 'share', 'gnuradio', 'grc', 'blocks'),
         )
 
         collected_paths = sum((paths.split(os.pathsep)
