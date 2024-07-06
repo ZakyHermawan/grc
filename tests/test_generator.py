@@ -10,6 +10,7 @@ import pytest
 from os import path
 import tempfile
 
+from gnuradio import gr
 from grc.core.platform import Platform
 
 
@@ -19,8 +20,7 @@ def test_generator():
                          'resources', 'test_compiler.grc')
     out_dir = tempfile.gettempdir()
     block_paths = [
-        path.join(path.dirname(__file__), '../../grc/blocks'),
-        path.join(path.dirname(__file__), '../../gr-blocks/grc')
+        path.join(gr.prefix(), 'share', 'gnuradio', 'grc'),
     ]
 
     platform = Platform(
