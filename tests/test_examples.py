@@ -5,7 +5,7 @@ from os import path
 import pytest
 
 from gnuradio import gr
-from grc.core.platform import Platform
+from gnuradio_companion.core.platform import Platform
 
 try:
     os.mkdir(path.join(path.dirname(__file__), 'resources/tests'))

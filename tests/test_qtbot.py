@@ -16,10 +16,10 @@ from qtpy import QtTest, QtCore, QtGui, QtWidgets, QT6
 from os import path, remove
 
 from gnuradio import gr
-from grc.gui_qt import properties
-from grc.gui_qt.grc import Application
-from grc.gui_qt.components.window import MainWindow
-from grc.gui_qt.Platform import Platform
+from gnuradio_companion.gui_qt import properties
+from gnuradio_companion.gui_qt.grc import Application
+from gnuradio_companion.gui_qt.components.window import MainWindow
+from gnuradio_companion.gui_qt.Platform import Platform
 
 log = logging.getLogger("grc")
 

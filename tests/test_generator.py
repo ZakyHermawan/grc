@@ -11,7 +11,7 @@ from os import path
 import tempfile
 
 from gnuradio import gr
-from grc.core.platform import Platform
+from gnuradio_companion.core.platform import Platform
 
 
 def test_generator():
