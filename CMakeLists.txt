@@ -1,5 +1,3 @@
-execute_process(COMMAND pip install ${CMAKE_CURRENT_SOURCE_DIR})
-
 add_subdirectory(tests)
 
 configure_file(
