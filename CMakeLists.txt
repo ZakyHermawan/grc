@@ -1,3 +1,5 @@
+execute_process(COMMAND pip install ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_subdirectory(tests)
 
 configure_file(
@@ -37,4 +39,3 @@ if(UNIX AND ENABLE_TESTING)
         GR_ADD_TEST(metainfo_test "${APPSTREAMCLI}" validate-relax "${CMAKE_CURRENT_SOURCE_DIR}/src/gnuradio_companion/scripts/freedesktop/org.gnuradio.grc.metainfo.xml")
     endif(APPSTREAMCLI)
 endif(UNIX AND ENABLE_TESTING)
-execute_process(COMMAND pip install ${CMAKE_CURRENT_SOURCE_DIR})

@@ -84,15 +84,15 @@ def check_blocks_path():
 
 def run_main():
     script_path = os.path.dirname(os.path.abspath(__file__))
-    source_tree_subpath = "/grc/scripts"
+    source_tree_subpath = "src/gnuradio_companion"
 
     if not script_path.endswith(source_tree_subpath):
         # run the installed version
-        from gnuradio.grc.main import main
+        from gnuradio_companion.main import main
     else:
         print("Running from source tree")
         sys.path.insert(1, script_path[:-len(source_tree_subpath)])
-        from grc.main import main
+        from gnuradio_companion.main import main
     sys.exit(main())
 
 
