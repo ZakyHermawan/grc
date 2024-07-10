@@ -1,7 +1,7 @@
 import pytest
 
-from grc.core.blocks._templates import MakoTemplates
-from grc.core.errors import TemplateError
+from gnuradio_companion.core.blocks._templates import MakoTemplates
+from gnuradio_companion.core.errors import TemplateError
 
 
 class Block(object):

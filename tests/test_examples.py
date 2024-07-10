@@ -4,7 +4,8 @@ from os import path
 
 import pytest
 
-from grc.core.platform import Platform
+from gnuradio import gr
+from gnuradio_companion.core.platform import Platform
 
 try:
     os.mkdir(path.join(path.dirname(__file__), 'resources/tests'))
@@ -13,9 +14,12 @@ except FileExistsError:
 
 # Gather blocks
 BLOCK_PATHS = []
-ROOT = path.join(path.dirname(__file__), '../..')
-BLOCK_PATHS = [path.abspath(path.join(ROOT, 'grc/blocks')),
-               path.abspath(path.join(ROOT, 'build/gr-uhd/grc'))]
+ROOT = path.join(path.dirname(__file__), '..')
+BLOCK_PATHS = [
+    path.join(gr.prefix(), 'share', 'gnuradio', 'grc', 'blocks'),
+    path.join(gr.prefix(), 'share', 'gnuradio', 'examples', 'uhd')
+]
+
 for file_dir in os.scandir(ROOT):
     # If it is a module
     if path.isdir(file_dir) and file_dir.name.startswith("gr-"):

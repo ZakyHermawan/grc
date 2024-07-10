@@ -6,19 +6,18 @@ options:
     comment: ''
     copyright: ''
     description: ''
+    gen_linking: dynamic
     generate_options: bokeh_gui
     generator_class_name: TopBlockGenerator
-    generator_module: gnuradio.grc.workflows.python_bokeh_gui
+    generator_module: gnuradio_companion.workflows.python_bokeh_gui
     hier_block_src_path: '.:'
     id: test_python_bokeh_gui_workflow
     max_nouts: '0'
     output_language: python
     placement: (0, 0)
-    qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Not titled yet
@@ -193,4 +192,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.10.0.0git-1481-g81a99d68
+  grc_version: v3.11.0.0git-792-gd3eb57d0

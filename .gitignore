@@ -1,3 +1,4 @@
-build
-src/grc.egg-info
-
+__pycache__/
+build/
+src/gnuradio_companion.egg-info/
+.pytest_cache/

@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     generator_class_name: CppTopBlockGenerator
-    generator_module: gnuradio.grc.workflows.cpp_qt_gui
+    generator_module: gnuradio_companion.workflows.cpp_qt_gui
     hier_block_src_path: '.:'
     id: test_cpp_qt_gui_workflow
     max_nouts: '0'
@@ -191,4 +191,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.10.0.0git-1489-g07ad53d3
+  grc_version: v3.11.0.0git-792-gd3eb57d0

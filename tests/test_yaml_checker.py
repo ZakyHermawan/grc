@@ -6,7 +6,7 @@
 
 import yaml
 
-from grc.core.schema_checker import Validator, BLOCK_SCHEME
+from gnuradio_companion.core.schema_checker import Validator, BLOCK_SCHEME
 
 
 BLOCK1 = """
