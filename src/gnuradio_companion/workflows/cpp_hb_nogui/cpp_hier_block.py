@@ -5,9 +5,8 @@ import codecs
 
 from .cpp_top_block import CppTopBlockGenerator
 
-from .. import Constants
-from ..io import yaml
-
+from ...core import Constants
+from ...core.io import yaml
 
 class CppHierBlockGenerator(CppTopBlockGenerator):
     """Extends the top block generator to also generate a block YML file"""

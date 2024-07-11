@@ -114,7 +114,7 @@ def build_params(params_raw, have_inputs, have_outputs, flags, block_id):
 
     if not flags.not_dsp:
         add_param(id='alias', name='Block Alias', dtype='string',
-                  hide='part', category=ADVANCED_PARAM_TAB)
+                  hide='part', default='', category=ADVANCED_PARAM_TAB)
 
         if have_outputs or have_inputs:
             add_param(id='affinity', name='Core Affinity', dtype='int_vector',

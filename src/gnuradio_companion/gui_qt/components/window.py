@@ -24,7 +24,6 @@ import sys
 import subprocess
 import cProfile
 import pstats
-import shutil
 
 from typing import Union
 
@@ -1299,7 +1298,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def properties_triggered(self):
         log.debug("properties")
         if len(self.currentFlowgraphScene.selected_blocks()) != 1:
-            log.warn("Opening Properties even though selected_blocks() != 1 ")
+            log.warning("Opening Properties even though selected_blocks() != 1 ")
         self.currentFlowgraphScene.selected_blocks()[0].open_properties()
 
     def enable_triggered(self):
@@ -1376,16 +1375,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if self.currentView.process_is_done():
             self.generate_triggered()
             if self.currentView.generator:
-                program_names = [
-                    'x-terminal-emulator',
-                    'gnome-terminal',
-                    'konsole',
-                    'xfce4-terminal',
-                    'urxvt',
-                    'xterm',
-                    'foot'
-                ]
-                xterm = self.app.qsettings.value("grc/xterm_executable", "") or self.find_program(program_names)
+                xterm = self.app.qsettings.value("grc/xterm_executable", "")
                 if self.currentFlowgraphScene.saved and self.currentFlowgraphScene.filename:
                     # Save config before execution
                     # self.config.save()
@@ -1602,20 +1592,3 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.setCurrentIndex(fg_nr)
             result.append(self.currentFlowgraphScene.filename)
         return result
-
-    def find_program(self, program_names):
-        """
-        Check if either program in program_name can be executed in command line
-        simulating find_program in cmake
-
-        Args:
-            program_names: list of programs to check if either of them can be executed
-
-        Returns:
-            program name if from program_names if it can be executed, else return None
-        """
-        for name in program_names:
-            path = shutil.which(name)
-            if path is not None:
-                return path
-        return None

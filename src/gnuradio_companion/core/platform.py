@@ -291,7 +291,7 @@ class Platform(Element):
             try:
                 source_id, sink_id = connection.get('type', [])
             except ValueError:
-                log.warn('Invalid connection template.')
+                log.warning('Invalid connection template.')
                 continue
             connection_id = str(source_id), str(sink_id)
             self.connection_templates[connection_id] = connection.get(

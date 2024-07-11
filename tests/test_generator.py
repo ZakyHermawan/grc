@@ -10,7 +10,6 @@ import pytest
 from os import path
 import tempfile
 
-from gnuradio import gr
 from gnuradio_companion.core.platform import Platform
 
 
@@ -21,7 +20,6 @@ def test_generator():
     grc_files = [
         path.join(path.dirname(__file__), 'resources', 'test_cpp.grc'),
         path.join(path.dirname(__file__), 'resources', 'test_compiler.grc'),
-        path.join(path.dirname(__file__), 'resources', 'test_python_bokeh_gui_workflow.grc'),
         path.join(path.dirname(__file__), 'resources', 'test_python_hb_nogui_workflow.grc'),
         path.join(path.dirname(__file__), 'resources', 'test_python_hb_qt_gui_workflow.grc'),
         path.join(path.dirname(__file__), 'resources', 'test_python_nogui_workflow.grc'),
@@ -32,25 +30,12 @@ def test_generator():
         path.join(path.dirname(__file__), 'resources', 'test_cpp_qt_gui_workflow.grc'),
     ]
 
-    # read workflow files so it can be loaded by platform
-    workflow_paths = [
-        path.join(path.dirname(__file__), '../workflows/cpp_hb_nogui'),
-        path.join(path.dirname(__file__), '../workflows/cpp_hb_qt_gui'),
-        path.join(path.dirname(__file__), '../workflows/cpp_nogui'),
-        path.join(path.dirname(__file__), '../workflows/cpp_qt_gui'),
-        path.join(path.dirname(__file__), '../workflows/python_bokeh_gui'),
-        path.join(path.dirname(__file__), '../workflows/python_hb_nogui'),
-        path.join(path.dirname(__file__), '../workflows/python_hb_qt_gui'),
-        path.join(path.dirname(__file__), '../workflows/python_nogui'),
-        path.join(path.dirname(__file__), '../workflows/python_qt_gui'),
-    ]
-
     platform = Platform(
         name='GNU Radio Companion Compiler',
         prefs=None,
         version='0.0.0',
     )
-    platform.build_library(workflow_paths)
+    platform.build_library()
 
     for grc_file in grc_files:
         flow_graph = platform.make_flow_graph(grc_file)

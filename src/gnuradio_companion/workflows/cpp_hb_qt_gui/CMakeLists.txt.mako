@@ -65,4 +65,3 @@ target_link_libraries(${class_name}
     % endif
     % endfor
 )
-

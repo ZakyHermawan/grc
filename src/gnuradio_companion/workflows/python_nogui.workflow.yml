@@ -1,7 +1,0 @@
-id: python_nogui_workflow
-label: Python No GUI
-description: "python no gui workflow"
-output_language: Python
-generator_module: generator
-generator_class: TopBlockGenerator
-generator_options: no_gui

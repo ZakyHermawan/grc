@@ -197,7 +197,7 @@ def get_config_file_path(config_file: str = "grc.conf") -> str:
         if os.path.exists(newpath):
             return newpath
         if os.path.exists(oldpath):
-            log.warn(f"Found specification for config path '{newpath}', but file does not exist. " +
+            log.warning(f"Found specification for config path '{newpath}', but file does not exist. " +
                      f"Old default config file path '{oldpath}' exists; using that. " +
                      "Please consider moving configuration to new location.")
             return oldpath
@@ -208,13 +208,13 @@ def get_config_file_path(config_file: str = "grc.conf") -> str:
         os.makedirs(pathdir, exist_ok=True)
         return newpath
     except ImportError:
-        log.warn("Could not retrieve GNU Radio configuration directory from GNU Radio. Trying defaults.")
+        log.warning("Could not retrieve GNU Radio configuration directory from GNU Radio. Trying defaults.")
         xdgconf = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
         xdgcand = os.path.join(xdgconf, config_file)
         if os.path.exists(xdgcand):
             return xdgcand
         if os.path.exists(oldpath):
-            log.warn(f"Using legacy config path '{oldpath}'. Please consider moving configuration " +
+            log.warning(f"Using legacy config path '{oldpath}'. Please consider moving configuration " +
                      f"files to '{newpath}'.")
             return oldpath
         # neither old, nor new path exist: create new path, return that
@@ -232,7 +232,7 @@ def get_state_directory() -> str:
         if os.path.exists(newpath):
             return newpath
         if os.path.exists(oldpath):
-            log.warn(f"Found specification for persistent state path '{newpath}', but file does not exist. " +
+            log.warning(f"Found specification for persistent state path '{newpath}', but file does not exist. " +
                      f"Old default persistent state path '{oldpath}' exists; using that. " +
                      "Please consider moving state to new location.")
             return oldpath
@@ -241,13 +241,13 @@ def get_state_directory() -> str:
         os.makedirs(newpath, exist_ok=True)
         return newpath
     except (ImportError, NameError):
-        log.warn("Could not retrieve GNU Radio persistent state directory from GNU Radio. Trying defaults.")
+        log.warning("Could not retrieve GNU Radio persistent state directory from GNU Radio. Trying defaults.")
         xdgstate = os.getenv("XDG_STATE_HOME", os.path.expanduser("~/.local/state"))
         xdgcand = os.path.join(xdgstate, "gnuradio")
         if os.path.exists(xdgcand):
             return xdgcand
         if os.path.exists(oldpath):
-            log.warn(f"Using legacy state path '{oldpath}'. Please consider moving state " +
+            log.warning(f"Using legacy state path '{oldpath}'. Please consider moving state " +
                      f"files to '{newpath}'.")
             return oldpath
         # neither old, nor new path exist: create new path, return that

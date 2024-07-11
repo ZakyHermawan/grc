@@ -1,1 +1,0 @@
-from .cpp_hier_block import CppQtHierBlockGenerator

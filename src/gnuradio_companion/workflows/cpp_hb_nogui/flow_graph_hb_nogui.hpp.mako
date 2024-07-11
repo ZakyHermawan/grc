@@ -23,14 +23,6 @@ GNU Radio version: ${config.version}
 ${inc}
 % endfor
 
-% if generate_options == 'qt_gui':
-#include <QVBoxLayout>
-#include <QScrollArea>
-#include <QWidget>
-#include <QGridLayout>
-#include <QSettings>
-#include <QApplication>
-% endif
 
 % if parameters:
 #include <boost/program_options.hpp>
@@ -43,24 +35,9 @@ class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') =
 param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 %>\
 
-% if generate_options == 'no_gui':
-class ${class_name} {
-% elif generate_options.startswith('hb'):
 class ${class_name} : public hier_block2 {
-% elif generate_options == 'qt_gui':
-class ${class_name} : public QWidget {
-    Q_OBJECT
-% endif
 
 private:
-% if generate_options == 'qt_gui':
-    QVBoxLayout *top_scroll_layout;
-    QScrollArea *top_scroll;
-    QWidget *top_widget;
-    QVBoxLayout *top_layout;
-    QGridLayout *top_grid_layout;
-    QSettings *settings;
-% endif
 
 
 % for block, make, declarations in blocks:
@@ -84,12 +61,8 @@ ${indent(declarations)}
 % endif
 
 public:
-% if generate_options.startswith('hb'):
     typedef std::shared_ptr<${class_name}> sptr;
     static sptr make(${param_str});
-% else:
-    top_block_sptr tb;
-% endif
     ${class_name}(${param_str});
     ~${class_name}();
 
@@ -101,7 +74,6 @@ public:
 };
 
 
-% if generate_options.startswith('hb'):
 <% in_sigs = flow_graph.get_hier_block_stream_io('in') %>
 <% out_sigs = flow_graph.get_hier_block_stream_io('out') %>
 
@@ -187,6 +159,4 @@ ${class_name}::make(${param_str})
     return gnuradio::make_block_sptr<${class_name}>(
         ${", ".join(param.name for param in parameters)});
 }
-% endif
 #endif
-

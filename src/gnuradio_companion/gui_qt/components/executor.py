@@ -5,6 +5,7 @@ import threading
 import time
 from pathlib import Path
 from shutil import which as find_executable
+from gnuradio import gr
 
 from ..Utils import get_cmake_nproc
 from ...core import Messages
@@ -21,7 +22,7 @@ class ExecFlowGraphThread(threading.Thread):
 
         self.view = view
         self.flow_graph = flowgraph
-        self.xterm_executable = xterm_executable
+        self.xterm_executable = xterm_executable or gr.prefs().get_string('grc', 'xterm_executable', 'xterm')
         self.update_callback = callback
 
         try:
