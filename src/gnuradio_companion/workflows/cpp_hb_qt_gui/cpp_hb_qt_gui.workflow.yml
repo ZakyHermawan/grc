@@ -27,3 +27,5 @@ parameters:
     label: QSS Theme
     dtype: file_open
     hide: ${ 'none' if qt_qss_theme else 'part' }
+cpp_templates:
+    includes: ['#include <gnuradio/top_block.h>']

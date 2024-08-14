@@ -23,3 +23,5 @@ parameters:
     dtype: string
     default: '[GRC Hier Blocks]'
     hide: 'none'
+cpp_templates:
+    includes: ['#include <gnuradio/top_block.h>']

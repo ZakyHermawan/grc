@@ -14,17 +14,15 @@ except FileExistsError:
 
 # Gather blocks
 BLOCK_PATHS = []
-ROOT = path.join(path.dirname(__file__), '..')
+ROOT = path.join(gr.prefix(), 'share', 'gnuradio', 'examples')
 BLOCK_PATHS = [
     path.join(gr.prefix(), 'share', 'gnuradio', 'grc', 'blocks'),
-    path.join(gr.prefix(), 'share', 'gnuradio', 'examples', 'uhd')
 ]
 
 for file_dir in os.scandir(ROOT):
     # If it is a module
     if path.isdir(file_dir) and file_dir.name.startswith("gr-"):
         BLOCK_PATHS.append(path.abspath(path.join(file_dir, "grc")))
-
 # These examples are known to fail and need to be resolved
 # But skip now to allow test to pass and prevent further
 # regression on the vast majority of examples
@@ -57,9 +55,9 @@ def gather_examples():
     example_paths = []
     for file_dir in os.scandir(ROOT):
         # If it is a module
-        if path.isdir(file_dir) and file_dir.name.startswith("gr-") and not file_dir.name.startswith('gr-trellis'):
+        if path.isdir(file_dir) and file_dir.name != 'trellis':
             try:
-                for pos_ex in os.scandir(path.join(file_dir, "examples")):
+                for pos_ex in os.scandir(file_dir):
                     if path.isfile(pos_ex) and pos_ex.name.endswith(".grc") and not path.basename(pos_ex) in BLACKLISTED:
                         example_paths.append(pos_ex)
                     elif path.isdir(pos_ex):
@@ -90,7 +88,7 @@ def test_all_examples(example):
         prefs=None,
         version='0.0.0',
     )
-    platform.build_library(BLOCK_PATHS)
+    platform.build_library()
 
     flow_graph = platform.make_flow_graph(example.path)
     flow_graph.rewrite()

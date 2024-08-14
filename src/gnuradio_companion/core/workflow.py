@@ -38,6 +38,8 @@ class Workflow:
         self.generator_options = self.workflow_params.pop('generator_options')
         self.generator_options_label = self.workflow_params.pop('generator_options_label')
         self.parameters = self.workflow_params.pop('parameters', [])
+        self.templates = self.workflow_params.pop('templates', {})
+        self.cpp_templates = self.workflow_params.pop('cpp_templates', {})
         self.asserts = self.workflow_params.pop('asserts', [])
         self.context = self.workflow_params # additional workflow parameters
 

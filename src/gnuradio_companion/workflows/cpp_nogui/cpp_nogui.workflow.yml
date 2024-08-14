@@ -42,3 +42,5 @@ parameters:
     dtype: string
     default: '{python} -u {filename}'
     hide: 'part'
+cpp_templates:
+    includes: ['#include <gnuradio/top_block.h>']

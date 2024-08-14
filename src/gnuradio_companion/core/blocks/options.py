@@ -6,8 +6,10 @@ from ..params import Param
 
 from collections import OrderedDict, defaultdict
 import typing
+import logging
 
-templates = MakoTemplates()
+logger = logging.getLogger(__name__)
+log = logging.getLogger('options')
 
 @register_build_in
 class Options(Block):
@@ -171,6 +173,16 @@ class Options(Block):
         )
 
         super().__init__(parent)
+        self.documentation['documentation'] = """
+            The options block sets special parameters for the flow graph. Only one option block is allowed per flow graph.
+            Title, author, and description parameters are for identification purposes.
+            The window size controls the dimensions of the flow graph editor. The window size (width, height) must be between (300, 300) and (4096, 4096).
+            The generate options controls the type of code generated. Non-graphical flow graphs should avoid using graphical sinks or graphical variable controls.
+            In a graphical application, run can be controlled by a variable to start and stop the flowgraph at runtime.
+            The id of this block determines the name of the generated file and the name of the class. For example, an id of my_block will generate the file my_block.py and class my_block(gr....
+            The category parameter determines the placement of the block in the block selection window. The category only applies when creating hier blocks. To put hier blocks into the root category, enter / for the category.
+            The Max Number of Output is the maximum number of output items allowed for any block in the flowgraph; to disable this set the max_nouts equal to 0.Use this to adjust the maximum latency a flowgraph can exhibit.
+        """
 
     def parse_workflows(self) -> None:
         """
@@ -235,6 +247,9 @@ class Options(Block):
         self.params['generate_options'].value = grc_parameters.get('generate_options')
         self.update_current_workflow()
 
+        if self.current_workflow == None:
+            return
+
         # fill default values of each workflow parameters from grc_parameters
         for i in range(len(self.workflow_params)):
             self.workflow_params[i]['params']['id'].value = grc_parameters.get('id')
@@ -254,6 +269,8 @@ class Options(Block):
         Update generator class based on current workflow
         """
         self.update_current_workflow()
+        if self.current_workflow == None:
+            return
         latest_title = self.params['title'].get_value()
         latest_author = self.params['author'].get_value()
         latest_copyright = self.params['copyright'].get_value()
@@ -278,13 +295,23 @@ class Options(Block):
                 output_language_pair = (output_language, output_language_label)
                 break
 
-        list_of_generated_options_pair = self.codegen_options[output_language_pair]
+        list_of_generated_options_pair = self.codegen_options.get(output_language_pair, [])
 
         tmp_dct = OrderedDict()
         tmp_dct.attributes = defaultdict(dict)
         for generated_options, generated_options_label in list_of_generated_options_pair:
             tmp_dct[generated_options] = generated_options_label
         self.params['generate_options'].options = tmp_dct
+
+        templates = self.current_workflow.templates
+        self.templates.clear()
+        for key in templates:
+            self.templates[key] = templates[key]
+
+        cpp_templates = self.current_workflow.cpp_templates
+        self.cpp_templates.clear()
+        for key in cpp_templates:
+            self.cpp_templates[key] = cpp_templates[key]
 
         self.update_generator_class()
         Element.rewrite(self)

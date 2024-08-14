@@ -14,6 +14,13 @@ parameters:
     options: [run, prompt]
     option_labels: [Run to Completion, Prompt for Exit]
     hide: 'none'
+-   id: run
+    label: Run
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: [Autostart, 'Off']
+    hide: ${ 'part' if run else 'none' }
 -   id: max_nouts
     label: Max Number of Output
     dtype: int
@@ -31,3 +38,22 @@ parameters:
     dtype: string
     default: '{python} -u {filename}'
     hide: 'part'
+templates:
+    imports: |-
+        from gnuradio import gr
+        from gnuradio.filter import firdes
+        from gnuradio.fft import window
+        import sys
+        import signal
+        % if generate_options == 'qt_gui':
+        from PyQt5 import Qt
+        % endif
+        % if not generate_options.startswith('hb'):
+        from argparse import ArgumentParser
+        from gnuradio.eng_arg import eng_float, intx
+        from gnuradio import eng_notation
+        % endif
+    callbacks:
+    - 'if ${run}: self.start()
+
+        else: self.stop(); self.wait()'

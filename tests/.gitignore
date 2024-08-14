@@ -11,4 +11,4 @@ resources/test_python_nogui_workflow.py
 resources/test_python_qt_gui_workflow.py
 resources/test_python_bokeh_gui_workflow.py
 resources/top_block.py
-tests/resources/tests/
+resources/tests/
