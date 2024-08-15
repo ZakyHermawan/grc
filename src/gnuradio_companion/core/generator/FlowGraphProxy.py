@@ -7,15 +7,57 @@
 
 from ..utils import expr_utils
 from operator import methodcaller, attrgetter
+from typing import List, Iterator
 
+from .BlockProxy import BlockProxy
 
-class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
+class FlowGraphProxy:  # TODO: move this in a refactored Generator
 
-    def __init__(self, fg):
-        self.orignal_flowgraph = fg
+    def __init__(self, parent: 'Element'):
+        self.parent = parent.parent
+        self.original_flowgraph = parent
+        self.options_block = self.original_flowgraph.options_block
+        self.blocks = []
+        self.connections = self.original_flowgraph.connections
+        self._eval_cache = self.original_flowgraph._eval_cache
+        self.namespace = self.original_flowgraph.namespace
+        self.imported_names = self.original_flowgraph.imported_names
+        self.grc_file_path = self.original_flowgraph.grc_file_path
 
-    def __getattr__(self, item):
-        return getattr(self.orignal_flowgraph, item)
+        for block in self.original_flowgraph.blocks:
+            self.blocks.append(BlockProxy(block))
+
+        self.parent_platform = self.original_flowgraph.parent_platform
+
+    def imports(self) -> List[str]:
+        return self.original_flowgraph.imports()
+
+    def get_variables(self) -> List['Element']:
+        return self.original_flowgraph.get_variables()
+
+    def get_snippets_dict(self, section=None) -> List[dict]:
+        return self.original_flowgraph.get_snippets_dict(section)
+
+    def get_enabled_connections(self) -> List['Element']:
+        return self.original_flowgraph.get_enabled_connections()
+
+    def get_bypassed_blocks(self) -> List['Element']:
+        return self.original_flowgraph.get_bypassed_blocks()
+
+    def get_parameters(self) -> List['Element']:
+        return self.original_flowgraph.get_parameters()
+
+    def get_monitors(self) -> List['Element']:
+        return self.original_flowgraph.get_monitors()
+
+    def get_option(self, key) -> 'Param.EvaluationType':
+        return self.original_flowgraph.get_option(key)
+
+    def iter_enabled_blocks(self) -> Iterator['Element']:
+        return self.original_flowgraph.iter_enabled_blocks()
+
+    def get_enabled_blocks(self) -> List['Element']:
+        return self.original_flowgraph.get_enabled_blocks()
 
     def get_hier_block_stream_io(self, direction):
         """

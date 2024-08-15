@@ -5,11 +5,12 @@ import tempfile
 import textwrap
 
 from mako.template import Template
+from jinja2 import Environment, FileSystemLoader
 
-from ...core import Messages, blocks
-from ...core.Constants import TOP_BLOCK_FILE_MODE
-from ...core.generator.FlowGraphProxy import FlowGraphProxy
-from ...core.utils import expr_utils
+from gnuradio_companion.core import Messages, blocks
+from gnuradio_companion.core.Constants import TOP_BLOCK_FILE_MODE
+from gnuradio_companion.core.generator.FlowGraphProxy import FlowGraphProxy
+from gnuradio_companion.core.utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 
@@ -32,6 +33,7 @@ class TopBlockGenerator(object):
         self._flow_graph = FlowGraphProxy(flow_graph)
         self.generate_options = self._flow_graph.get_option(
             'generate_options')
+        self._template_engine = self._flow_graph.get_option('template_engine')
 
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
@@ -41,6 +43,13 @@ class TopBlockGenerator(object):
         filename = self._flow_graph.get_option('id') + '.py'
         self.file_path = os.path.join(output_dir, filename)
         self.output_dir = output_dir
+        self.env = Environment(
+            loader=FileSystemLoader(searchpath=DATA_DIR),
+            trim_blocks=True,
+            lstrip_blocks=True
+        )
+        self.env.filters['repr'] = self.repr_filter
+        self.template_jinja = self.env.get_template('flow_graph_hb_nogui.py.jinja')
 
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
@@ -89,6 +98,9 @@ class TopBlockGenerator(object):
             if filename == self.file_path:
                 os.chmod(filename, self._mode)
 
+    def repr_filter(self, value):
+        return repr(value)
+
     def _build_python_code_from_template(self):
         """
         Convert the flow graph to python code.
@@ -127,14 +139,26 @@ class TopBlockGenerator(object):
             'version': platform.config.version,
             'catch_exceptions': fg.get_option('catch_exceptions')
         }
-        flow_graph_code = python_template.render(
-            title=title,
-            imports=self._imports(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            **self.namespace
-        )
+
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.template_jinja.render(
+                title=title,
+                imports=self._imports(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = python_template.render(
+                title=title,
+                imports=self._imports(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
+
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))
@@ -163,8 +187,8 @@ class TopBlockGenerator(object):
             imports.append('import os')
             imports.append('import sys')
 
-        if fg.get_option('thread_safe_setters'):
-            imports.append('import threading')
+        # Used by thread_safe_setters and startup Event
+        imports.append('import threading')
 
         def is_duplicate(l):
             if (l.startswith('import') or l.startswith('from')) and l in seen:
@@ -278,7 +302,7 @@ class TopBlockGenerator(object):
             sink = connection.sink_port
             for source in connection.source_port.resolve_virtual_source():
                 resolved = connection_factory(
-                    fg.orignal_flowgraph, source, sink)
+                    fg.original_flowgraph, source, sink)
                 connections.append(resolved)
 
         virtual_connections = [c for c in connections if (isinstance(
@@ -310,7 +334,7 @@ class TopBlockGenerator(object):
                     # Ignore disabled connections
                     continue
                 connection = connection_factory(
-                    fg.orignal_flowgraph, source_port, sink.sink_port)
+                    fg.original_flowgraph, source_port, sink.sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)

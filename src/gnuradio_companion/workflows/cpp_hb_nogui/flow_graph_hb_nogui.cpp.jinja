@@ -1,0 +1,90 @@
+{% macro doubleindent(code) %}
+{{ code | replace('\n', '\n        ') }}
+{% endmacro %}
+
+/********************
+GNU Radio C++ Flow Graph Source File
+
+Title: {{ title }}
+{% if flow_graph.get_option('author') %}
+Author: {{ flow_graph.get_option('author') }}
+{% endif %}
+{% if flow_graph.get_option('description') %}
+Description: {{ flow_graph.get_option('description') }}
+{% endif %}
+GNU Radio version: {{ config.version }}
+********************/
+
+#include "{{ flow_graph.get_option('id') }}.hpp"
+{% if flow_graph.get_option('realtime_scheduling') %}
+#include <gnuradio/realtime.h>
+{% endif %}
+
+{% if parameters %}
+namespace po = boost::program_options;
+{% endif %}
+using namespace gr;
+
+{% set class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') == 'top_block' else '') %}
+{% set parts = [] %}
+{% for param in parameters %}
+    {% set _ = parts.append('{} {}'.format(param.vtype, param.name)) %}
+{% endfor %}
+{% set param_str = ', '.join(parts) %}
+
+{% set param_str_without_types = parameters | map(attribute='name') | join(', ') %}
+{% set initializer_str = parameters | map('join', '(', ')') | join(',\n  ') %}
+
+
+{% if initializer_str %}
+{% set initializer_str = '\n: ' + initializer_str %}
+{% endif %}
+
+{{ class_name }}::{{ class_name }} ({{ param_str }}) {{ initializer_str }} {
+
+{% if flow_graph.get_option('thread_safe_setters') %}
+## self._lock = threading.RLock()
+{% endif %}
+    this->tb = gr::make_top_block("{{ title }}");
+
+{% if blocks %}
+{% for blk, blk_make, declarations in blocks %}
+        {{ doubleindent(blk_make) }}
+{% endfor %}
+{% endif %}
+
+{% if connections %}
+{% for connection in connections %}
+    {{ connection.rstrip() }};
+{% endfor %}
+{% endif %}
+}
+
+{{ class_name }}::~{{ class_name }} () {
+}
+
+// Callbacks:
+{% for var in parameters + variables %}
+{{ var.vtype }} {{ class_name }}::get_{{ var.name }} () const {
+    return this->{{ var.name }};
+}
+
+void {{ class_name }}::closeEvent(QCloseEvent *event) {
+    this->settings->setValue("geometry", this->saveGeometry());
+    event->accept();
+}
+
+void {{ class_name }}::set_{{ var.name }} ({{ var.vtype }} {{ var.name }}) {
+{% if flow_graph.get_option('thread_safe_setters') %}
+    ## with self._lock:
+    return;
+{% else %}
+    this->{{ var.name }} = {{ var.name }};
+    {% for callback in callbacks[var.name] %}
+    {{ callback }};
+    {% endfor %}
+{% endif %}
+}
+
+{% endfor %}
+

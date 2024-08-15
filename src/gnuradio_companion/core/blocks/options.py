@@ -71,6 +71,13 @@ class Options(Block):
                 option_labels=['QT GUI'],
                 hide="none",
             ),
+            dict(id='template_engine',
+                label='Template Engine',
+                dtype='enum',
+                default='mako',
+                options=['mako', 'jinja'],
+                option_labels=['Mako', 'Jinja'],
+            ),
             dict(id='gen_linking',
                 label='Linking',
                 workflow='',
@@ -303,15 +310,20 @@ class Options(Block):
             tmp_dct[generated_options] = generated_options_label
         self.params['generate_options'].options = tmp_dct
 
+        # make templates and cpp_templates based on current workflow templates arguments
         templates = self.current_workflow.templates
         self.templates.clear()
-        for key in templates:
-            self.templates[key] = templates[key]
+        self.templates = MakoTemplates(
+            _bind_to=self,
+            **templates
+        )
 
         cpp_templates = self.current_workflow.cpp_templates
         self.cpp_templates.clear()
-        for key in cpp_templates:
-            self.cpp_templates[key] = cpp_templates[key]
+        self.cpp_templates = MakoTemplates(
+            _bind_to=self,
+            **cpp_templates
+        )
 
         self.update_generator_class()
         Element.rewrite(self)

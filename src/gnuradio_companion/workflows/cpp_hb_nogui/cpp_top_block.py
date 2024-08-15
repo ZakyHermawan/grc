@@ -6,11 +6,12 @@ import tempfile
 import re
 
 from mako.template import Template
+from jinja2 import Environment, FileSystemLoader
 
-from ...core import Messages, blocks
-from ...core.Constants import TOP_BLOCK_FILE_MODE
-from ...core.generator.FlowGraphProxy import FlowGraphProxy
-from ...core.utils import expr_utils
+from gnuradio_companion.core import Messages, blocks
+from gnuradio_companion.core.Constants import TOP_BLOCK_FILE_MODE
+from gnuradio_companion.core.generator.FlowGraphProxy import FlowGraphProxy
+from gnuradio_companion.core.utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 
@@ -37,6 +38,7 @@ class CppTopBlockGenerator(object):
         self._flow_graph = FlowGraphProxy(flow_graph)
         self._generate_options = self._flow_graph.get_option(
             'generate_options')
+        self._template_engine = self._flow_graph.get_option('template_engine')
 
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
@@ -46,6 +48,14 @@ class CppTopBlockGenerator(object):
         filename = self._flow_graph.get_option('id')
         self.file_path = os.path.join(output_dir, filename)
         self.output_dir = output_dir
+        self.env = Environment(
+            loader=FileSystemLoader(searchpath=DATA_DIR),
+            trim_blocks=True,
+            lstrip_blocks=True
+        )
+        self.header_template_jinja = self.env.get_template('flow_graph_hb_nogui.hpp.jinja')
+        self.source_template_jinja = self.env.get_template('flow_graph_hb_nogui.cpp.jinja')
+        self.cmake_template_jinja = self.env.get_template('CMakeLists.txt.jinja')
 
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
@@ -124,14 +134,24 @@ class CppTopBlockGenerator(object):
 
         output = []
 
-        flow_graph_code = source_template.render(
-            title=self.title,
-            includes=self._includes(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            **self.namespace
-        )
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.source_template_jinja.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = source_template.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))
@@ -151,14 +171,24 @@ class CppTopBlockGenerator(object):
 
         output = []
 
-        flow_graph_code = header_template.render(
-            title=self.title,
-            includes=self._includes(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            **self.namespace
-        )
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.header_template_jinja.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = header_template.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))
@@ -187,17 +217,31 @@ class CppTopBlockGenerator(object):
 
         output = []
 
-        flow_graph_code = cmake_template.render(
-            title=self.title,
-            includes=self._includes(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            links=self._links(),
-            cmake_tuples=cmake_tuples,
-            packages=self._packages(),
-            **self.namespace
-        )
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.cmake_template_jinja.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                links=self._links(),
+                cmake_tuples=cmake_tuples,
+                packages=self._packages(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = cmake_template.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                links=self._links(),
+                cmake_tuples=cmake_tuples,
+                packages=self._packages(),
+                **self.namespace
+            )
+
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))
@@ -423,7 +467,7 @@ class CppTopBlockGenerator(object):
             sink = connection.sink_port
             for source in connection.source_port.resolve_virtual_source():
                 resolved = connection_factory(
-                    fg.orignal_flowgraph, source, sink)
+                    fg.original_flowgraph, source, sink)
                 connections.append(resolved)
 
         virtual_connections = [c for c in connections if (isinstance(
@@ -455,7 +499,7 @@ class CppTopBlockGenerator(object):
                     # Ignore disabled connections
                     continue
                 connection = connection_factory(
-                    fg.orignal_flowgraph, source_port, sink.sink_port)
+                    fg.original_flowgraph, source_port, sink.sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)

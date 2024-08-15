@@ -10,5 +10,9 @@ resources/test_cpp_qt_gui_workflow/
 resources/test_python_nogui_workflow.py
 resources/test_python_qt_gui_workflow.py
 resources/test_python_bokeh_gui_workflow.py
+resources/test_cpp_jinja
+resources/test_python_jinja.py
+resources/test_cpp_mako
+resources/test_python_mako.py
 resources/top_block.py
 resources/tests/
