@@ -10,15 +10,17 @@ class Workflow:
     Workflow class is used to parse workflow file
 
     Attributes:
-        id (str): unique name of workflow
-        descripton (str): detailed information of workflow
-        output_language (str): target language
+        id (str): Unique name of workflow
+        descripton (str): Detailed information of workflow
+        output_language (str): Target language
         output_language_label (str): Information for users about the target language of the workflow
         generator_class (str): Name of the code generator class
         generator_module (str): Module name of where the code generator class is located
         generator_options (str): Used to select a workflow
         generator_options_label (str): Information for users to select a workflow
-        parameters (arr of dict): parameters for options block
+        parameters (arr of dict): Parameters for options block
+        cpp_templates (dict): Templates arguments for C++ Code Generation
+        templates (dict): Templates arguments for Python Code Generation 
         asserts (arr): array of assert statements
         context (dict): additional workflow parameters
     """
